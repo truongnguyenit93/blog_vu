@@ -1,0 +1,41 @@
+#search-fill {
+  background-color: @search-bg-color;
+  display: none;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @search-zindex;
+
+  .search-form {
+    margin: 20% auto 0;
+    width: @search-form-width;
+  }
+
+  .search-field {
+    font-size: @search-input-font-size;
+    height: @search-input-height;
+  }
+
+  .search-submit {
+    font-size: @search-submit-font-size;
+    width: @search-submit-width;
+    height: @search-submit-height;
+  }
+
+  .search-toggle {
+    color: @search-toggle-color;
+    cursor: pointer;
+    font-size: @search-toggle-font-size;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    .transition-transform(@animation-base);
+
+    &:hover {
+      .rotate(90deg);
+    }
+  }
+}

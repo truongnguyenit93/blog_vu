@@ -1,0 +1,37 @@
+#about-author {
+  background-color: @author-bg-color;
+  margin-top: 30px;
+  padding: 30px;
+  .shadow();
+
+  .author-image {
+    float: left;
+    & > img { border-radius: 50%; }
+  }
+
+  .author-info {
+    margin-left: 120px;
+    overflow: hidden;
+    padding-left: 1px;
+  }
+
+  .author-name > a {
+    color: @author-name-text-color;
+    &:hover { color: @brand-color; }
+  }
+
+  .author-bio {
+    line-height: @author-bio-line-height;
+    margin-bottom: 0;
+  }
+
+  .author-meta {
+    margin-top: 10px;
+
+    & > a {
+      color: @author-meta-icon-color;
+      margin-right: 3px;
+      &:hover { color: @primary-text-color; }
+    }
+  }
+}

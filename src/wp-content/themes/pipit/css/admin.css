@@ -1,0 +1,11 @@
+#setting-error-tgmpa {
+  display: block !important;
+}
+
+.redux-notice,
+.rAds {
+	display: none !important;
+	visibility: hidden !important;
+	width: 0 !important;
+	height: 0 !important;
+}

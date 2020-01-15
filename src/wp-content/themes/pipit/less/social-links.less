@@ -1,0 +1,33 @@
+.social-links {
+  display: inline-block;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  vertical-align: middle;
+  .translateY(-50%);
+
+  li {
+    float: left;
+
+    & > a {
+      background-color: @social-icon-bg-color;
+      border-radius: 50%;
+      color: @social-icon-color;
+      display: block;
+      line-height: @social-icon-height;
+      margin-left: 5px;
+      text-align: center;
+      width: @social-icon-width;
+      height: @social-icon-height;
+      .transition(all @animation-base);
+
+      &:hover {
+        background-color: @social-icon-hover-bg-color;
+        color: @social-icon-color;
+      }
+    }
+  }
+}

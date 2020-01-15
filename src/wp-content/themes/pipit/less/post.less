@@ -1,0 +1,99 @@
+.post.type-post {
+  background-color: @post-bg-color;
+  margin-bottom: 30px;
+  padding: 30px;
+  position: relative;
+  word-break: break-word;
+  .shadow();
+
+  .entry-media {
+    margin: -30px -30px 30px;
+    .wp-post-image { width: 100%; }
+  }
+
+  .entry-gallery { opacity: 0; }
+
+  .entry-header { margin-bottom: 20px; }
+
+  .entry-title {
+    font-size: @post-title-font-size;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+
+    & > a {
+      color: @post-title-text-color;
+      &:hover { color: @brand-color; }
+    }
+  }
+
+  .entry-meta > span {
+    color: @post-meta-text-color;
+    font-size: @post-meta-font-size;
+    font-weight: @post-meta-font-weight;
+    letter-spacing: @post-meta-letter-spacing;
+    margin-right: 10px;
+    text-transform: uppercase;
+
+    a {
+      color: @post-meta-text-color;
+      &:hover { color: @link-hover-color; }
+    }
+
+    .fa { font-weight: @post-meta-icon-font-weight; }
+  }
+
+  .entry-content {    
+    line-height: @post-content-line-height;
+    
+    & > *:first-child,
+    & > *:first-child > *:first-child { margin-top: 0; }
+    & > *:last-child,
+    & > *:last-child > *:last-child { margin-bottom: 0; }
+
+    h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
+
+    .fluid-width-video-wrapper { margin: 30px 0; }
+  }
+
+  .entry-footer { margin-top: 30px; }
+
+  .read-more {
+    background-color: @button-alt-bg-color;
+    &:hover { background-color: @button-alt-hover-bg-color; }
+  }
+
+  .entry-share {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+
+    & > a {
+      background-color: @post-share-icon-bg-color;
+      border-radius: 50%;
+      color: @post-share-icon-color;
+      display: block;
+      float: left;
+      line-height: @post-share-icon-height;
+      margin-left: 3px;
+      text-align: center;
+      width: @post-share-icon-width;
+      height: @post-share-icon-height;
+      .transition(background-color @animation-base);
+
+      &:hover {
+        background-color: @link-hover-color;
+        color: @post-share-icon-color;
+      }
+    }
+  }
+
+  &.sticky .entry-title > a:before {
+    color: @post-sticky-icon-color;
+    content: "\f08d";
+    font-family: FontAwesome;
+    font-size: @post-sticky-icon-font-size;
+    margin-right: 10px;
+    position: relative;
+    top: -3px;
+  }
+}

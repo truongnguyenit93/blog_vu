@@ -1,0 +1,17 @@
+html.no-scroll,
+html.no-scroll body {
+  overflow: hidden;
+}
+
+.navbar-sticky:not(.navbar-sticky-transparent) {
+  padding-top: @navbar-height;
+}
+
+.row.sm-padding {
+  margin-right: 0;
+  margin-bottom: -@row-sm-padding;
+  margin-left: 0;
+  padding: 0 @row-sm-padding;
+
+  & > div { padding: @row-sm-padding !important; }
+}

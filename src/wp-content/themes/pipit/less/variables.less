@@ -1,0 +1,488 @@
+// Colors
+
+@brand-color: #c39f76;
+@primary-text-color: #526071;
+@secondary-text-color: #bfbfbf;
+@white-color: #fff;
+@lighter-gray-color: #f5f5f5;
+@light-gray-color: #e8e8e8;
+@dark-gray-color: #727272;
+@darker-gray-color: #333;
+@black-color: #000;
+@twitter-color: #55acee;
+@facebook-color: #3b5998;
+@google-color: #dc4e41;
+
+// Grid
+
+@screen-xs: 480px;
+@screen-sm: 768px;
+@screen-md: 992px;
+@screen-lg: 1200px;
+
+@screen-xs-max: (@screen-sm - 1);
+@screen-sm-max: (@screen-md - 1);
+@screen-md-max: (@screen-lg - 1);
+
+@row-sm-padding: 5px;
+
+// Typography
+
+@font-family-base: "Open Sans", sans-serif;
+@font-family-alt: "Open Sans Condensed", sans-serif;
+@font-size-base: 13px;
+@letter-spacing-base: .5px;
+@line-height-base: 1.5;
+
+@font-weight-light: 300;
+@font-weight-normal: 400;
+@font-weight-semi-bold: 600;
+@font-weight-bold: 700;
+@font-weight-extra-bold: 800;
+
+@font-size-h1: 35px;
+@font-size-h2: 30px;
+@font-size-h3: 25px;
+@font-size-h4: 20px;
+@font-size-h5: 17px;
+@font-size-h6: 14px;
+
+@headings-font-family: @font-family-alt;
+@headings-font-weight: @font-weight-bold;
+@headings-letter-spacing: @letter-spacing-base;
+@headings-line-height: 1.3;
+
+// Z-Index
+
+@zindex-1: 10;
+@zindex-2: 20;
+@zindex-3: 30;
+@zindex-4: 40;
+@zindex-5: 50;
+@zindex-6: 60;
+@zindex-7: 70;
+@zindex-8: 80;
+@zindex-9: 90;
+@zindex-10: 100;
+
+// Utilities
+
+@u-bordered-title-font-size: 16px;
+@u-bordered-title-border-bg-color: @secondary-text-color;
+@u-bordered-title-border-width: 20px;
+@u-bordered-title-border-height: 2px;
+
+@u-label-bg-color: @brand-color;
+@u-label-border-radius: 3px;
+@u-label-text-color: @white-color;
+@u-label-font-size: 11px;
+@u-label-font-weight: @font-weight-semi-bold;
+
+// Scaffolding
+
+@animation-base: .2s ease;
+@body-bg-color: @lighter-gray-color;
+@text-color: @primary-text-color;
+@link-color: @brand-color;
+@link-hover-color: @primary-text-color;
+@blockquote-border-color: @brand-color;
+@blockquote-text-color: darken(@secondary-text-color, 5%);
+@blockquote-font-size: 18px;
+@table-border-color: @light-gray-color;
+@hr-bg-color: @light-gray-color;
+@hr-width: 100px;
+@hr-height: 2px;
+@mark-bg-color: lighten(@brand-color, 30%);
+@dt-font-weight: @font-weight-bold;
+@code-bg-color: @lighter-gray-color;
+@code-border-color: @light-gray-color;
+@caption-font-family: @font-family-base;
+@caption-font-size: 12px;
+
+// Layout
+
+@no-sidebar-container-width: 750px;
+
+// Button
+
+@button-bg-color: @brand-color;
+@button-hover-bg-color: @primary-text-color;
+@button-alt-bg-color: @secondary-text-color;
+@button-alt-hover-bg-color: @brand-color;
+@button-text-color: @white-color;
+@button-font-family: @font-family-alt;
+@button-font-size: 13px;
+@button-font-weight: @font-weight-bold;
+@button-letter-spacing: @letter-spacing-base;
+@button-line-height: @line-height-base;
+
+// Form
+
+@form-input-bg-color: @white-color;
+@form-input-focus-bg-color: @lighter-gray-color;
+@form-input-border-color: @light-gray-color;
+@form-input-font-family: @font-family-base;
+@form-input-font-size: 13px;
+@form-input-height: 40px;
+@form-label-font-size: 12px;
+@compact-form-submit-text-color: @white-color;
+@compact-form-submit-height: @form-input-height;
+@compact-form-submit-width: @compact-form-submit-height;
+
+// Navbar
+
+@navbar-bg-color: @white-color;
+@navbar-height: 60px;
+@navbar-font-family: @font-family-alt;
+@navbar-font-size: 14px;
+@navbar-font-weight: @font-weight-bold;
+@navbar-text-color: @primary-text-color;
+@navbar-hover-bg-color: @brand-color;
+@navbar-hover-text-color: @white-color;
+@navbar-line-height: @navbar-height;
+@navbar-letter-spacing: @letter-spacing-base;
+@navbar-zindex: @zindex-9;
+
+@navbar-brand-font-size: 24px;
+
+@navbar-dropdown-min-width: 200px;
+@navbar-dropdown-bg-color: @darker-gray-color;
+@navbar-dropdown-hover-bg-color: @navbar-hover-bg-color;
+@navbar-dropdown-text-color: @white-color;
+@navbar-dropdown-sep-color: lighten(@navbar-dropdown-bg-color, 4%);
+@navbar-dropdown-zindex: @navbar-zindex;
+@navbar-dropdown-font-size: 12px;
+@navbar-dropdown-font-weight: @font-weight-normal;
+@navbar-dropdown-line-height: 1.5;
+
+@navbar-mobile-bg-color: @darker-gray-color;
+@navbar-mobile-dark-color: darken(@navbar-mobile-bg-color, 2%);
+@navbar-mobile-width: 320px;
+@navbar-mobile-text-color: @secondary-text-color;
+@navbar-mobile-hover-text-color: @white-color;
+@navbar-mobile-line-height: 40px;
+@navbar-mobile-dropdown-toggle-width: @navbar-mobile-line-height;
+@navbar-mobile-dropdown-toggle-height: @navbar-mobile-dropdown-toggle-width;
+@navbar-mobile-form-bg-color: @navbar-mobile-dark-color;
+@navbar-mobile-form-border-color: @navbar-mobile-form-bg-color;
+@navbar-mobile-form-text-color: @white-color;
+
+@navbar-toggle-bg-color: @darker-gray-color;
+@navbar-toggle-alt-bg-color: @navbar-mobile-text-color;
+@navbar-toggle-width: 20px;
+@navbar-toggle-height: 2px;
+@navbar-toggle-zindex: @zindex-9;
+
+@navbar-transparent-text-color: @white-color;
+@navbar-transparent-border-height: 4px;
+@navbar-transparent-toggle-bg-color: @navbar-transparent-text-color;
+
+// Social links
+
+@social-icon-bg-color: @dark-gray-color;
+@social-icon-hover-bg-color: @primary-text-color;
+@social-icon-color: @white-color;
+@social-icon-width: 26px;
+@social-icon-height: @social-icon-width;
+
+@social-icon-light-bg-color: @white-color;
+@social-icon-light-color: @dark-gray-color;
+
+// Hero
+
+@hero-height: 550px;
+@hero-bg-color: @primary-text-color;
+@hero-text-color: @white-color;
+@hero-triangle-width: 10px;
+@hero-triangle-zindex: @zindex-1;
+@hero-mask-zindex: @zindex-1;
+@hero-content-max-width: 600px;
+@hero-content-zindex: @zindex-2;
+@hero-title-font-family: @font-family-base;
+@hero-description-font-size: 18px;
+@hero-description-line-height: 1.7;
+
+@hero-mobile-height: 300px;
+@hero-mobile-title-font-size: 25px;
+
+// Slick
+
+@slick-nav-icon-color: @white-color;
+@slick-nav-icon-font-size: 25px;
+@slick-nav-zindex: @zindex-1;
+
+// Featured posts
+
+@feature-height: 62.5%;
+@feature-mask-bg-color: rgba(0,0,0,.4);
+@feature-mask-hover-bg-color: rgba(0,0,0,.6);
+@feature-permalink-zindex: @zindex-1;
+@feature-title-text-color: @white-color;
+
+// Post
+
+@post-bg-color: @white-color;
+@post-title-text-color: @primary-text-color;
+@post-title-font-size: 22px;
+@post-meta-text-color: @secondary-text-color;
+@post-meta-font-size: 11px;
+@post-meta-font-weight: @font-weight-bold;
+@post-meta-letter-spacing: @letter-spacing-base;
+@post-meta-icon-font-weight: @font-weight-bold;
+@post-content-line-height: 2;
+@post-share-icon-bg-color: @post-meta-text-color;
+@post-share-icon-color: @white-color;
+@post-share-icon-width: 26px;
+@post-share-icon-height: @post-share-icon-width;
+@post-sticky-icon-color: @secondary-text-color;
+@post-sticky-icon-font-size: 13px;
+
+// Masonry 
+
+@masonry-title-font-size: 18px;
+
+// Box
+
+@box-min-height: 400px;
+@box-text-color: @white-color;
+@box-mask-bg-color: rgba(0,0,0,.4);
+@box-wrapper-max-width: 500px;
+
+// List
+
+@list-media-max-width: 150px;
+@list-title-font-size: 18px;
+
+// Review
+
+@review-bg-color: @white-color;
+@review-track-border-radius: 3px;
+@review-track-height: 5px;
+@review-track-bg-color: @light-gray-color;
+@review-progress-bg-color: @brand-color;
+@review-total-bg-color: @primary-text-color;
+@review-total-text-color: @white-color;
+@review-total-font-size: 35px;
+@review-total-width: 90px;
+@review-total-height: @review-total-width;
+
+// Author
+
+@author-bg-color: @white-color;
+@author-name-text-color: @primary-text-color;
+@author-bio-line-height: @post-content-line-height;
+@author-meta-icon-color: @secondary-text-color;
+
+// Related posts
+
+@related-bg-color: @white-color;
+@related-permalink-bg-color: @primary-text-color;
+@related-permalink-hover-bg-color: darken(@primary-text-color, 10%);
+@related-permalink-alt-bg-color: fade(@darker-gray-color, 40%);
+@related-permalink-alt-hover-bg-color: fade(@darker-gray-color, 60%);
+@related-permalink-zindex: @zindex-1;
+@related-title-text-color: @white-color;
+@related-title-font-size: 18px;
+
+// Comment
+
+@comment-bg-color: @white-color;
+@comment-content-border-color: @secondary-text-color;
+@comment-author-name-font-weight: @font-weight-bold;
+@comment-author-name-text-color: @primary-text-color;
+@comment-by-author-icon-color: @secondary-text-color;
+@comment-meta-text-color: @secondary-text-color;
+@comment-logged-in-text-color: @primary-text-color;
+@comment-body-line-height: @post-content-line-height;
+
+// Archive
+
+@archive-header-bg-color: @white-color;
+@archive-header-title-font-size: 22px;
+@archive-header-icon-color: @secondary-text-color;
+@archive-header-description-text-color: @secondary-text-color;
+
+// Sidebar
+
+@sidebar-bg-color: @white-color;
+
+// Widget
+
+@widget-item-text-color: @primary-text-color;
+@widget-item-gap: 12px;
+
+@widget-thumbnail-width: 31.333333333%;
+@widget-thumbnail-gap: 1%;
+@widget-thumbnail-two-columns-width: 48%;
+@widget-thumbnail-two-columns-gap: 1%;
+@widget-thumbnail-mask-bg-color: rgba(0,0,0,.4);
+@widget-thumbnail-icon-color: @white-color;
+@widget-thumbnail-icon-font-size: 25px;
+
+@widget-about-profile-image-border-color: @white-color;
+@widget-about-profile-image-width: 100px;
+@widget-about-profile-image-height: @widget-about-profile-image-width;
+@widget-about-profile-name-text-color: @white-color;
+@widget-about-profile-name-font-size: 16px;
+@widget-about-bio-line-height: @post-content-line-height;
+
+@widget-category-item-name-count-bg-color: @sidebar-bg-color;
+@widget-category-item-name-count-zindex: @zindex-1;
+@widget-category-item-border-color: @secondary-text-color;
+@widget-category-item-count-bg-color: @brand-color;
+@widget-category-item-count-border-radius: 3px;
+@widget-category-item-count-text-color: @white-color;
+@widget-category-item-count-font-size: 11px;
+@widget-category-item-count-min-width: 22px;
+@widget-category-item-count-font-weight: @font-weight-bold;
+
+@widget-posts-list-thumbnail-bg-color: @light-gray-color;
+@widget-posts-list-thumbnail-width: 70px;
+@widget-posts-list-thumbnail-height: @widget-posts-list-thumbnail-width;
+
+@widget-rss-title-color: @primary-text-color;
+@widget-rss-link-font-weight: @font-weight-bold;
+
+@widget-tag-font-size: 9px;
+@widget-tag-font-weight: @font-weight-bold;
+@widget-tag-letter-spacing: @letter-spacing-base;
+@widget-tag-bg-color: @secondary-text-color;
+@widget-tag-text-color: @white-color;
+@widget-tag-hover-bg-color: @primary-text-color;
+
+// Media feed
+
+@_media-item-width: 12.5%;
+@_media-item-gap: 5px;
+@_media-item-mask-bg-color: rgba(0,0,0,.4);
+@_media-item-icon-color: @white-color;
+@_media-item-icon-font-size: 25px;
+
+@_media-item-mobile-width: 25%;
+
+// Shortcodes
+
+@accordion-title-border-color: @light-gray-color;
+@accordion-title-active-border-color: @brand-color;
+@accordion-title-font-size: 14px;
+@accordion-content-bg-color: @lighter-gray-color;
+
+@tab-title-border-color: transparent;
+@tab-title-active-border-color: @brand-color;
+@tab-title-font-size: 14px;
+@tab-content-bg-color: @accordion-content-bg-color;
+
+@tweet-bg-color: @lighter-gray-color;
+@tweet-hover-bg-color: lighten(@twitter-color, 20%);
+
+@comparison-label-text-color: @white-color;
+@comparison-label-font-weight: @font-weight-semi-bold;
+@comparison-handle-width: 44px;
+@comparison-handle-height: @comparison-handle-width;
+@comparison-handle-border-radius: 5px;
+@comparison-handle-bg-color: @brand-color;
+@comparison-handle-drag-bg-color: @dark-gray-color;
+@comparison-handle-icon-color: @white-color;
+@comparison-handle-icon-font-size: 19px;
+
+// Search
+
+@search-bg-color: @white-color;
+@search-zindex: @zindex-10;
+@search-form-width: 50%;
+@search-input-font-size: 20px;
+@search-input-height: 60px;
+@search-submit-font-size: 20px;
+@search-submit-width: @search-input-height;
+@search-submit-height: @search-submit-width;
+@search-toggle-color: @secondary-text-color;
+@search-toggle-font-size: 20px;
+
+// WPCF7
+
+@wpcf7-message-bg-color: @secondary-text-color;
+@wpcf7-message-text-color: @white-color;
+
+// WooCommerce
+
+@wc-product-bg-color: @white-color;
+@wc-product-width: 30.8%;
+@wc-tablet-product-width: 48%;
+@wc-mobile-product-width: 100%;
+@wc-product-title-text-color: @primary-text-color;
+@wc-product-title-font-size: 16px;
+@wc-product-rating-color: @secondary-text-color;
+@wc-product-price-text-color: @brand-color;
+@wc-product-del-text-color: @secondary-text-color;
+@wc-product-amount-font-weight: @font-weight-bold;
+@wc-product-description-line-height: @post-content-line-height;
+
+@wc-sale-bg-color: @brand-color;
+@wc-sale-font-size: 11px;
+@wc-sale-font-weight: @font-weight-bold;
+@wc-sale-width: 50px;
+@wc-sale-height: 30px;
+
+@wc-tab-bg-color: @white-color;
+@wc-tab-border-color: @light-gray-color;
+@wc-tab-active-bg-color: @wc-tab-border-color;
+@wc-tab-font-size: 13px;
+@wc-tab-font-weight: @font-weight-normal;
+@wc-tab-text-color: @primary-text-color;
+@wc-tab-hover-text-color: @wc-tab-text-color;
+
+@wc-reviews-bg-color: transparent;
+@wc-review-avatar-width: 40px;
+@wc-review-meta-font-size: 13px;
+@wc-review-meta-text-color: @secondary-text-color;
+@wc-review-description-font-size: 13px;
+
+@wc-widget-font-weight: @font-weight-normal;
+@wc-widget-thumbnail-width: 40px;
+@wc-widget-meta-alt-bg-color: @secondary-text-color;
+
+@wc-widget-price-filter-handle-bg-color: @brand-color;
+@wc-widget-price-filter-bar-height: 5px;
+@wc-widget-price-filter-bar-bg-color: @light-gray-color;
+@wc-widget-price-filter-bar-alt-bg-color: @secondary-text-color;
+@wc-widget-price-filter-label-font-size: 13px;
+
+@wc-widget-cart-text-color: @light-gray-color;
+@wc-widget-cart-total-border-color: lighten(@navbar-dropdown-bg-color, 10%);
+@wc-widget-cart-total-text-color: @secondary-text-color;
+@wc-widget-cart-total-font-weight: @font-weight-normal;
+@wc-widget-cart-total-amount-text-color: @brand-color;
+@wc-widget-cart-total-amount-font-weight: @font-weight-bold;
+
+@wc-remove-icon-color: @secondary-text-color;
+@wc-remove-icon-hover-color: @wc-remove-icon-color;
+@wc-remove-icon-hover-bg-color: transparent;
+@wc-remove-icon-width: auto;
+@wc-remove-icon-height: auto;
+@wc-remove-icon-font-size: 12px;
+@wc-remove-icon-font-weight: @font-weight-normal;
+
+@wc-cart-border-color: @light-gray-color;
+@wc-cart-thumbnail-width: 40px;
+@wc-total-table-border-color: @wc-cart-border-color;
+
+@wc-checkout-form-border-color: @wc-cart-border-color;
+
+@wc-navbar-dropdown-min-width: 230px;
+@wc-navbar-count-bg-color: @brand-color;
+@wc-navbar-count-border-radius: 3px;
+@wc-navbar-count-text-color: @white-color;
+@wc-navbar-count-font-size: 11px;
+@wc-navbar-count-width: 18px;
+@wc-navbar-count-height: 18px;
+@wc-navbar-count-line-height: @wc-navbar-count-height;
+
+@wc-pagination-bg-color: @secondary-text-color;
+@wc-pagination-hover-bg-color: @primary-text-color;
+@wc-pagination-min-width: 40px;
+@wc-pagination-min-height: @wc-pagination-min-width;
+@wc-pagination-line-height: @wc-pagination-min-height;
+@wc-pagination-text-color: @white-color;
+@wc-pagination-hover-text-color: @wc-pagination-text-color;
+@wc-pagination-font-weight: @font-weight-bold;
+@wc-pagination-arrow-font-size: 11px;

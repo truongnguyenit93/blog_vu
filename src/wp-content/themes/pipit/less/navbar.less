@@ -1,0 +1,120 @@
+#navigation-bar {
+  background-color: @navbar-bg-color;
+  height: @navbar-height;
+  padding: 0 20px;
+  position: relative;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: @navbar-zindex;
+  .backface-visibility(hidden);
+  .shadow();
+  .transition(all @animation-base);
+
+  .brand-logo {
+    float: left;
+    position: absolute;
+    top: 50%;
+    .transition(opacity @animation-base);
+    .translateY(-50%);
+
+    &.light { opacity: 0; }
+
+    &.text {
+      color: @navbar-text-color;
+      font-family: @navbar-font-family;
+      font-size: @navbar-brand-font-size;
+      font-weight: @navbar-font-weight;
+      letter-spacing: @navbar-letter-spacing;
+      text-transform: uppercase;
+      &.light { color: @navbar-transparent-text-color; }
+    }
+  }
+
+  .social-links {
+    float: right;
+    .transition-transform(@animation-base);
+  }
+
+  #main-navigation {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    .translateX(-50%);
+  }
+
+  .nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    & > .menu-item > a {
+      font-family: @navbar-font-family;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+
+  .menu-item {
+    float: left;
+    position: relative;
+
+    & > a {
+      color: @navbar-text-color;
+      display: block;
+      font-size: @navbar-font-size;
+      font-weight: @navbar-font-weight;
+      letter-spacing: @navbar-letter-spacing;
+      line-height: @navbar-line-height;
+      padding: 0 12px;
+      position: relative;
+      text-transform: uppercase;
+      .transition(all @animation-base);
+    }
+  }
+
+  .sub-menu {
+    display: none;
+    list-style-type: none;
+    &.open { display: block; }
+  }
+}
+
+.navbar-transparent #navigation-bar {
+  background-color: transparent;
+  margin-top: 15px;
+  padding: 0 30px;
+  position: absolute;
+  .box-shadow(none);
+
+  .brand-logo {
+    &.dark { opacity: 0; }
+    &.light { opacity: 1; }
+  }
+
+  .social-links {
+    li > a {
+      background-color: @social-icon-light-bg-color;
+      color: @social-icon-light-color;
+
+      &:hover {
+        background-color: @social-icon-hover-bg-color;
+        color: @social-icon-color;
+      }
+    }
+  }
+}
+
+.navbar-sticky #navigation-bar,
+.navbar-sticky-transparent #navigation-bar { position: fixed; }
+
+.navbar-big-logo {
+  .brand-logo {
+    display: inline-block;
+    margin: 40px 0 10px;
+    position: relative;
+    left: 50%;
+    .translateX(-50%);
+  }
+
+  &.with-hero .brand-logo,
+  &.with-featured-posts .brand-logo { margin-bottom: 40px; }
+}

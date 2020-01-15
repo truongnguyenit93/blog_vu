@@ -1,0 +1,37 @@
+.box-item.type-post {
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: @box-min-height;
+
+  &:before {
+    background-color: @box-mask-bg-color;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .entry-wrapper {
+    max-width: @box-wrapper-max-width;
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    left: 30px;
+  }
+
+  .entry-title > a,
+  .entry-meta > span a {
+    color: @box-text-color;
+  }
+
+  .entry-meta > span a:hover { color: @brand-color; }
+
+  .entry-share { display: none; }
+
+  .entry-footer { margin-top: 20px; }
+}
