@@ -1890,7 +1890,7 @@ html.no-scroll body {
 }
 .post.type-post .entry-title,
 .page.type-page .entry-title {
-  font-size: 22px;
+  font-size: 36px;
   margin-bottom: 5px;
   text-transform: uppercase;
 }
@@ -3055,7 +3055,8 @@ html.no-scroll body {
 30.0 Search
 --------------------------------------------------------------*/
 #search-fill {
-  background-color: #fff;
+  opacity: 0.9 !important;
+  background-color: #000;
   display: none;
   opacity: 0;
   position: fixed;

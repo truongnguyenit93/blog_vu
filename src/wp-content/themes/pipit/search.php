@@ -23,7 +23,7 @@
 			<?php if ( have_posts() ) : ?>
 
 				<header class="archive-header">
-					<h1 class="archive-title"><?php printf( esc_html( apply_filters( 'pipit_search_title', esc_html__( 'Search results for: %s', 'pipit' ) ) ), '<span>' . get_search_query() . '</span>' ); ?></h1>
+					<h1 class="archive-title"><?php printf( esc_html( apply_filters( 'pipit_search_title', esc_html__( 'Kết quả tìm kiếm: %s', 'pipit' ) ) ), '<span>' . get_search_query() . '</span>' ); ?></h1>
 				</header>
 
 				<?php while ( have_posts() ) : the_post(); ?>
