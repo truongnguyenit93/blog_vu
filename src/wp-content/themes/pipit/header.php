@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-
+<script data-ad-client="ca-pub-2846464681440164" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <?php wp_head(); ?>
 </head>
 
