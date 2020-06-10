@@ -16,7 +16,7 @@
 
 <?php get_header(); ?>
 	
-	<div class="<?php echo esc_attr( $content_column_class ); ?>">
+	<div class="<?php echo esc_attr( $content_column_class ); ?> mobile-plr-0">
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main">
 
