@@ -3734,6 +3734,9 @@ div.wpcf7-response-output {
     background: none !important;
   }
   .no-sidebar .site-content.container {
-    width: 970px;
+    width: 85%;
+  }
+  .entry-footer a {
+    display: none;
   }
 }
