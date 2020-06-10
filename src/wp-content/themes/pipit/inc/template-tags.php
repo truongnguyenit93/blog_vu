@@ -344,7 +344,7 @@ function pipit_about_author() {
 	$google = get_the_author_meta( 'google' );
 	$linkedin = get_the_author_meta( 'linkedin' ); ?>
 	
-	<div id="about-author" class="clearfix">
+	<div id="about-author" class="clearfix" style="display:none;">
 		<div class="author-image">
 			<?php echo get_avatar( get_the_author_meta( 'email' ), '90', null, get_the_author_meta( 'display_name' ) ); ?>
 		</div>
