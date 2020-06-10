@@ -178,7 +178,7 @@ function pipit_entry_share() { ?>
 
 	<?php echo apply_filters( 'pipit_before_post_sharer', '<span class="entry-share clearfix">' ); ?>
 <!--		<a class="popup twitter" href="--><?php //echo esc_url( 'http://twitter.com/share?text=' . urlencode( get_the_title() ) . '&amp;url=' . urlencode( get_the_permalink() ) ); ?><!--"><i class="fa fa-twitter"></i></a>-->
-		<a class="popup facebook" href="<?php echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . get_the_permalink() ); ?>"><i class="fa fa-facebook"></i></a>
+<!--		<a class="popup facebook " href="--><?php //echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . get_the_permalink() ); ?><!--"><i class="fa fa-facebook"></i></a>-->
 <!--		<a class="popup google" href="--><?php //echo esc_url( 'https://plus.google.com/share?url=' . get_the_permalink() ); ?><!--"><i class="fa fa-google-plus"></i></a>-->
 	<?php echo apply_filters( 'pipit_after_post_sharer', '</span>' ); ?>
 
