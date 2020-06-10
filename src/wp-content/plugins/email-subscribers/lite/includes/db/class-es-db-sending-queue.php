@@ -520,6 +520,7 @@ class ES_DB_Sending_Queue {
 		return $wpdb->get_var( $wpdb->prepare( $query, $args ) );
 	}
 
+	
 	/**
 	 * Get Email => ID map based on Sending Queue table
 	 * 

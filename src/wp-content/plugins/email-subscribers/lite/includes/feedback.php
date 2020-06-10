@@ -54,7 +54,7 @@ function ig_es_render_general_feedback_widget() {
 			'width'             => 700,
 			'force'             => true,
 			'confirmButtonText' => __( 'Send', 'email-subscribers' ),
-			'consent_text'      => __( 'Allow Email Subscribers to send plugin settings. It will help us to understand your issue better. We guarantee no sensitive data is collected.', 'email-subscribers' ),
+			'consent_text'      => __( 'Allow Email Subscribers to track plugin usage. It will help us to understand your issue better. We guarantee no sensitive data is collected.', 'email-subscribers' ),
 			'name'              => ''
 		);
 
@@ -86,7 +86,7 @@ function ig_es_render_broadcast_created_feedback_widget() {
 	ES_Common::render_feedback_widget( $params );
 }
 
-add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_created_feedback_widget' );
+//add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_created_feedback_widget' );
 
 /**
  * Render Broadcast Created feedback widget.
@@ -122,6 +122,7 @@ function ig_es_render_fb_widget() {
 				'width'             => 500,
 				'delay'             => 2, // seconds
 				'confirmButtonText' => '<i class="dashicons dashicons-es dashicons-facebook"></i> ' . __( 'Join Now', 'email-subscribers' ),
+				'confirmButtonLink' => 'https://www.facebook.com/groups/2298909487017349/',
 				'show_once'         => true
 			);
 
@@ -188,3 +189,123 @@ if ( ! function_exists( 'ig_es_can_ask_user_for_review' ) ) {
 }
 
 add_filter( 'ig_es_can_ask_user_for_review', 'ig_es_can_ask_user_for_review', 10, 2 );
+
+/**
+ * Render Icegram-Email Subscribers merge feedback widget.
+ *
+ * @since 4.3.13
+ */
+function ig_es_render_iges_merge_feedback() {
+
+	global $ig_es_feedback;
+
+	if ( is_admin() ) {
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( ! ES()->is_es_admin_screen() ) {
+			return;
+		}
+
+		$total_contacts = ES()->contacts_db->count_active_contacts_by_list_id();
+
+		if ( $total_contacts >= 5 ) {
+
+			$event = 'poll.merge_iges';
+
+			// If user has already given feedback on Icegram page, don't ask them again
+			$is_event_tracked = $ig_es_feedback->is_event_tracked( 'ig', $event );
+
+			if ( $is_event_tracked ) {
+				return;
+			}
+
+			$params = array(
+				'type'              => 'poll',
+				'title'             => __( 'Subscription forms and CTAs??', 'email-subscribers' ),
+				'event'             => $event,
+				'desc'              => '<div><p class="mt-4">You use <a href="https://wordpress.org/plugins/email-subscribers" target="_blank"><b class="text-blue-700 font-semibold underline">Email Subscribers</b></a> to send email campaigns.</p><p class="mt-3">Would you like us to include onsite popups and action bars in the plugin as well? This way you can <b class="font-semibold">convert visitors to subscribers, drive traffic and run email marketing from a single plugin</b>.</p> <p class="mt-3">Why do we ask?</p> <p class="mt-3">Our <a class="text-blue-700 font-semibold underline" href="https://wordpress.org/plugins/icegram" target="_blank"><b>Icegram</b></a> plugin already does onsite campaigns. We are thinking of merging Icegram & Email Subscribers into a single plugin.</p> <p class="mt-3"><b class="font-semibold">Will a comprehensive ConvertKit / MailChimp like email + onsite campaign plugin be useful to you?</b></p> </div><p class="mt-3">',
+				'poll_options'      => array(
+					'yes' => array( 'text' => '<b>' . __( 'Yes', 'email-subscribers' ) . '</b>', 'color' => 'green' ),
+					'no'  => array( 'text' => '<b>' . __( 'No', 'email-subscribers' ) . '</b>', 'color' => 'red' )
+				),
+				'allow_multiple'    => false,
+				'position'          => 'bottom-center',
+				'width'             => 400,
+				'delay'             => 2, // seconds
+				'confirmButtonText' => __( 'Send my feedback to <b>Icegram team</b>', 'email-subscribers' ),
+				'show_once'         => true
+			);
+
+			ES_Common::render_feedback_widget( $params );
+		}
+
+	}
+}
+
+add_action( 'admin_footer', 'ig_es_render_iges_merge_feedback' );
+
+/**
+ * Can load sweetalert js file
+ *
+ * @param bool $load
+ *
+ * @return bool
+ *
+ * @since 4.3.13
+ */
+function ig_es_can_load_sweetalert_js( $load = false ) {
+
+	if ( ES()->is_es_admin_screen() ) {
+		return true;
+	}
+
+	return $load;
+}
+
+add_filter( 'ig_es_can_load_sweetalert_js', 'ig_es_can_load_sweetalert_js', 10, 1 );
+
+
+/**
+ * Render Broadcast Created feedback widget.
+ *
+ * @since 4.4.7
+ */
+function ig_es_render_broadcast_ui_review() {
+
+	if ( is_admin() ) {
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( ! ES()->is_es_admin_screen() ) {
+			return;
+		}
+
+		$event = 'broadcast.ui.review';
+
+		$params = array(
+			'type'              => 'fb',
+			'widget_tyoe'       => 'success',
+			'title'             => __( 'Broadcast Created Successfully!', 'email-subscribers' ),
+			'event'             => $event,
+			'html'              => '<div style="margin-bottom:30px;"> ' . __( 'If you like new Broadcast UI, leave us a <b>5 stars review</b>. <br /><br />Do you have a feedback? Contact Us.', 'email-subscribers' ) . '</div>',
+			'position'          => 'top-right',
+			'width'             => 500,
+			'delay'             => 2, // seconds
+			'confirmButtonText' => '<i class="dashicons dashicons-star-empty"></i> ' . __( 'Leave Review', 'email-subscribers' ),
+			'confirmButtonLink' => 'https://wordpress.org/support/plugin/email-subscribers/reviews/?filter=5',
+			'showCancelButton'  => true,
+			'cancelButtonText'  => __( 'Contact Us', 'email-subscribers' ),
+			'cancelButtonLink'  => 'https://icegram.com',
+			'show_once'         => true
+		);
+
+		ES_Common::render_feedback_widget( $params );
+	}
+}
+
+add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_ui_review' );

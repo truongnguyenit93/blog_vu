@@ -407,11 +407,17 @@ class ES_DB_Lists_Contacts extends ES_DB {
 
 			$where = "email IN ($contacts_str)";
 
-			$email_id_map = $this->get_columns_map( 'email', 'id', $where );
+			$email_id_map = ES()->contacts_db->get_columns_map( 'email', 'id', $where );
 
 			foreach ( $contacts as $key => $contact ) {
-				$status     = 'subscribed';
-				$optin_type = IG_SINGLE_OPTIN;
+
+				if ( empty( $email_id_map[ $contact['email'] ] ) ) {
+					continue;
+				}
+
+				$contact[ $key ]['contact_id'] = $email_id_map[ $contact['email'] ];
+				$status                        = 'subscribed';
+				$optin_type                    = IG_SINGLE_OPTIN;
 				if ( $contact['status'] === 'Single Opt In' ) {
 					$optin_type = IG_SINGLE_OPTIN;
 				} elseif ( $contact['status'] === 'Confirmed' ) {
@@ -522,7 +528,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 		if ( ! empty( $where ) ) {
 			$query .= " WHERE $where";
 		}
-
+		
 		return $wpdb->get_var( $query );
 	}
 
@@ -783,7 +789,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			$where = implode( " AND ", $where );
 			$where = $wpdb->prepare( $where, $args );
 		}
-
+		
 		if ( $count_only ) {
 			return $this->get_total_contacts( $where, $distinct );
 		} else {
@@ -930,5 +936,6 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	public function get_all_contacts() {
 		return $this->get_contacts( 'all' );
 	}
+
 
 }

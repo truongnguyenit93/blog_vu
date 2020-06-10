@@ -4,15 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'IG_Tracker_V_1_0_15' ) ) {
+if ( ! class_exists( 'IG_Tracker_V_1_2_3' ) ) {
 
 	/**
-	 * Class IG_Tracker_V_1_0_15
+	 * Class IG_Tracker_V_1_2_2
 	 *
 	 * Icegram tracker handler class is responsible for sending anonymous plugin
 	 * data to Icegram servers for users that actively allowed data tracking.
 	 *
-	 * @class       IG_Tracker_V_1_0_15
+	 * @class       IG_Tracker_V_1_2_3
 	 * @since       1.0.0
 	 *
 	 * @copyright   Copyright (c) 2019, Icegram
@@ -20,7 +20,7 @@ if ( ! class_exists( 'IG_Tracker_V_1_0_15' ) ) {
 	 * @author      Icegram
 	 * @package     feedback
 	 */
-	class IG_Tracker_V_1_0_15 {
+	class IG_Tracker_V_1_2_3 {
 
 		/**
 		 * Get Active, Inactive or all plugins info
@@ -110,6 +110,60 @@ if ( ! class_exists( 'IG_Tracker_V_1_0_15' ) ) {
 		 */
 		public static function get_inactive_plugins( $details = false ) {
 			return self::get_plugins( 'inactive', $details );
+		}
+
+		/**
+		 * Check whether plugin is active or not.
+		 *
+		 * @param string $plugin
+		 *
+		 * @return bool
+		 *
+		 * @since 1.2.2
+		 */
+		public static function is_plugin_activated( $plugin = '' ) {
+			if ( empty( $plugin ) ) {
+				return false;
+			}
+
+			$active_plugins = self::get_active_plugins();
+
+			if ( count( $active_plugins ) == 0 ) {
+				return false;
+			}
+
+			if ( in_array( $plugin, $active_plugins ) ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Is plugin installed?
+		 *
+		 * @param string $plugin
+		 *
+		 * @return bool
+		 *
+		 * @since 1.2.2
+		 */
+		public static function is_plugin_installed( $plugin = '' ) {
+			if ( empty( $plugin ) ) {
+				return false;
+			}
+
+			$all_plugins = self::get_plugins();
+
+			if ( count( $all_plugins ) == 0 ) {
+				return false;
+			}
+
+			if ( in_array( $plugin, $all_plugins ) ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		/**

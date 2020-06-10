@@ -181,12 +181,12 @@ class Email_Subscribers_Public {
 								'guid'       => $guid
 							);
 
-							ES()->mailer->send_welcome_email( $email, $data );
-
 							$lists     = ES()->lists_db->get_all_lists_name_by_contact( $db_id );
 							$list_name = implode( ", ", $lists );
 
 							$data['list_name'] = $list_name;
+
+							ES()->mailer->send_welcome_email( $email, $data );
 
 							ES()->mailer->send_add_new_contact_notification_to_admins( $data );
 						} elseif ( $option === 'unsubscribe' ) {
@@ -261,8 +261,8 @@ class Email_Subscribers_Public {
 					$link = ES()->links_db->get_by_hash( $hash );
 
 					if ( ! empty( $link ) ) {
-						$campaign_id = ! empty( $data['campaign_id'] ) ? $data['campaign_id'] : 0;
-						$message_id  = ! empty( $data['message_id'] ) ? $data['message_id'] : 0;
+						$campaign_id = ! empty( $link['campaign_id'] ) ? $link['campaign_id'] : 0;
+						$message_id  = ! empty( $link['message_id'] ) ? $link['message_id'] : 0;
 						$contact_id  = ! empty( $data['contact_id'] ) ? $data['contact_id'] : 0;
 						$link_id     = ! empty( $link['id'] ) ? $link['id'] : 0;
 
@@ -295,29 +295,27 @@ class Email_Subscribers_Public {
 		$contact_data = wp_parse_args( $contact_data, $default_data );
 
 		$contact = ES()->contacts_db->is_contact_exist_in_list( $email, $list_id );
+
 		if ( empty( $contact['contact_id'] ) ) {
 			$contact_id = ES()->contacts_db->insert( $contact_data );
 		} else {
 			$contact_id = $contact['contact_id'];
 		}
 
-		if ( empty( $contact['list_id'] ) ) {
+		$optin_type        = get_option( 'ig_es_optin_type', true );
+		$optin_type        = ( $optin_type === 'double_opt_in' ) ? 2 : 1;
+		$list_id           = ! empty( $list_id ) ? $list_id : 1;
+		$list_contact_data = array(
+			'contact_id'    => $contact_id,
+			'status'        => 'subscribed',
+			'subscribed_at' => ig_get_current_date_time(),
+			'optin_type'    => $optin_type,
+			'subscribed_ip' => null
+		);
 
-			$optin_type        = get_option( 'ig_es_optin_type', true );
-			$optin_type        = ( $optin_type === 'double_opt_in' ) ? 2 : 1;
-			$list_id           = ! empty( $list_id ) ? $list_id : 1;
-			$list_contact_data = array(
-				'contact_id'    => $contact_id,
-				'status'        => 'subscribed',
-				'subscribed_at' => ig_get_current_date_time(),
-				'optin_type'    => $optin_type,
-				'subscribed_ip' => null
-			);
+		ES()->lists_contacts_db->remove_contacts_from_lists( $contact_id, $list_id );
 
-			ES()->lists_contacts_db->remove_contacts_from_lists( $contact_id, $list_id );
-
-			ES()->lists_contacts_db->add_contact_to_lists( $list_contact_data, $list_id );
-		}
+		ES()->lists_contacts_db->add_contact_to_lists( $list_contact_data, $list_id );
 
 	}
 

@@ -1,3 +1,28 @@
+#menu-content-change:focus {
+    box-shadow: none;
+    color: #FFFFFF;
+}
+
+ul#menu-nav li.active {
+    background-color: #5a67d8;
+}
+
+#menu-nav li a.active {
+    color: #FFF;
+}
+
+.es-lists-table .column-created_at{
+    width:20%;
+}
+
+.es-lists-table .column-export{
+    width: 8%;
+}
+
+a:focus {
+    box-shadow: none;
+}
+
 #email_tabs_form div#es-settings-tabs {
     margin-top: 20px;
     padding: 0;
@@ -172,10 +197,10 @@
     line-height: 22px;
 }
 
-.email-subscribers_page_es_settings input[type=text], .email-subscribers_page_es_settings input[type=password], .email-subscribers_page_es_settings input[type=email], .email-subscribers_page_es_settings textarea, #list_description, .email-subscribers_page_es_settings select {
+/*.email-subscribers_page_es_settings input[type=text], .email-subscribers_page_es_settings input[type=password], .email-subscribers_page_es_settings input[type=email], .email-subscribers_page_es_settings textarea, #list_description, .email-subscribers_page_es_settings select {
     width: 70%;
 }
-
+*/
 .tablenav-pages span.paging-input {
     width: auto;
     display: inline-block;
@@ -340,9 +365,9 @@ p.search-box.box-ma10 {
 
 /* Admin Settings */
 
-.email-subscribers_page_es_settings #wpwrap {
+/*.email-subscribers_page_es_settings #wpwrap {
     background-color: white;
-}
+    }*/
 
 .form-table .helper {
     font-style: italic;
@@ -383,6 +408,16 @@ p.search-box.box-ma10 {
     color: #FFFFFF;
 }
 
+.wrap .page-title-action.es-main-button:hover {
+    color: #FFFFFF;
+    background-color: #5850ec;
+}
+
+.page-title-action.es-main-button {
+    background-color: #5850ec;
+    color: #FFFFFF;
+}
+
 .es-contact-form {
     width: 70%;
 }
@@ -390,14 +425,16 @@ p.search-box.box-ma10 {
 .es-contact-form .form-table td {
     line-height: 1.3em;
 }
-.es-note-child-category td{
+
+.es-note-child-category td {
     padding-left: 2em;
 }
 
 /**** Dashboard : start ***/
-.toplevel_page_es_dashboard .about-header{
+.toplevel_page_es_dashboard .about-header {
     margin-top: 2em;
 }
+
 .wrap.about-wrap {
     background-color: transparent;
     position: relative;
@@ -435,7 +472,7 @@ p.search-box.box-ma10 {
 
 /*.form-table th {
     width: 350px !important;
-}*/
+    }*/
 
 .es-ltr {
     width: 20em;
@@ -936,31 +973,34 @@ h5.es-badge {
     max-width: 50em;
     overflow: hidden;
     padding: 2em 3em;
-    height:50em; 
+    height: 50em;
     /*-webkit-transform: translate(0%,45%);*/
-    -webkit-transform: translate(0%,7vw);
-    transform: translate(0%,7vw);
+    -webkit-transform: translate(0%, 7vw);
+    transform: translate(0%, 7vw);
     /*top: 50%;
     left: 50%;*/
 }
+
 .sp {
     background: #FFF;
-    height:22em;
+    height: 22em;
     position: absolute;
     font-size: 1.1em;
     line-height: 2em;
     width: 40em;
 }
-.es-footer{
+
+.es-footer {
     float: right;
-    margin-top:75%;
+    margin-top: 75%;
     /*font-weight: bold;*/
     font-size: 1.2em;
     cursor: pointer;
     /*text-decoration: underline;*/
 }
-a.button-send,.es-error-actions .es-dashboard-btn{
-   text-decoration: none !important;
+
+a.button-send, .es-error-actions .es-dashboard-btn {
+    text-decoration: none !important;
     color: #387bff;
     /* font-size: 1.1em; */
     font-weight: 500;
@@ -969,37 +1009,46 @@ a.button-send,.es-error-actions .es-dashboard-btn{
     transition: background-color 0.5s;
     cursor: pointer;
 }
-a.button-send:hover,.es-error-actions .es-dashboard-btn:hover{
+
+a.button-send:hover, .es-error-actions .es-dashboard-btn:hover {
     background-color: #387bff !important;
     color: white !important;
 }
-.es-send-email-screen img.es-loader{
+
+/*.es-send-email-screen img.es-loader {
     display: inline-block;
     vertical-align: middle;
     margin-right: 1em;
-}
-.sp input[type="email"].error{
+}*/
+
+.sp input[type="email"].error {
     border: 1px solid red;
 }
-.es-error-actions{
+
+.es-error-actions {
     text-align: center;
     margin-top: 3em;
 }
-.es-error-actions .es-dashboard-btn{
+
+.es-error-actions .es-dashboard-btn {
 
 }
-.es-error-actions .button-hero{
+
+.es-error-actions .button-hero {
     width: 46% !important;
 }
-.sp h1{
+
+.sp h1 {
     text-align: center;
     color: #387bff;
-    line-height:1.3em;
+    line-height: 1.3em;
 }
+
 .sp .es-ltr {
-     padding: 1em;
+    padding: 1em;
 }
-.sp .button-hero{
+
+.sp .button-hero {
     color: #FFFFFF !important;
     border-color: #03a025 !important;
     background: #03a025 !important;
@@ -1009,59 +1058,71 @@ a.button-send:hover,.es-error-actions .es-dashboard-btn:hover{
     line-height: 1em;
 
 }
-.sp .es-actions{
+
+.sp .es-actions {
     margin: 30px auto;
     display: block;
     text-align: center;
     width: 45%;
     padding-top: 2em;
 }
-.sp form[name=klawoo_subscribe]{
+
+.sp form[name=klawoo_subscribe] {
     margin-right: 2em;
 }
-.sp .dashicons{
+
+.sp .dashicons {
     vertical-align: middle;
     color: #44ad69;
     margin-right: 0.3em;
 }
-.sp form[name=klawoo_subscribe] input[type="email"], .sp form[name=klawoo_subscribe] input[type="text"]{
+
+.sp form[name=klawoo_subscribe] input[type="email"], .sp form[name=klawoo_subscribe] input[type="text"] {
     width: 320px;
     padding: 1.25em 1em;
 }
 
 
-#es-send-email-form input[type="email"]{
+#es-send-email-form input[type="email"] {
     width: 18em;
     padding: 0.4em 0.5em;
     border: none;
     box-shadow: none;
     border-bottom: 1px solid gray;
 }
-.es-form-wrapper{
+
+.es-form-wrapper {
     padding: 0.5em 0.8em;
     background-color: #f9f9f9;
     border-radius: 3px;
 }
-.es-send-email-screen .es-form-wrapper form{
+
+.es-send-email-screen .es-form-wrapper form {
     margin-top: 0.8em;
 }
-.sp.es-receive-error li{
+
+.sp.es-receive-error li {
     margin-bottom: 0;
 }
-.es-email-sending-error{
+
+.es-email-sending-error {
     line-height: 1em;
     padding: 1em;
 }
-.es-error form.es-onboarding{
+
+.es-error form.es-onboarding {
     margin-top: 1em;
 }
-.sp .es-gray{
-    color: #737373; 
-    line-height: 1.75; 
+
+.sp .es-gray {
+    color: #737373;
+    line-height: 1.75;
 }
-.sp .es-skip{
+
+.sp .es-skip {
     cursor: pointer;
 }
+
 /* onboarding :end */
 
 .ig-es-indicator {
@@ -1192,7 +1253,8 @@ div.es .last {
 .email-subscribers_page_es_pricing #wpwrap #wpcontent {
     background-color: #f1f1f1;
 }
-.es-floting-button{
+
+.es-floting-button {
     width: 10em;
     padding: 0.5em;
     text-align: center;
@@ -1204,34 +1266,41 @@ div.es .last {
     border: none;
     font-size: 1.3em;
 }
-.es-floting-button a{
+
+.es-floting-button a {
     text-decoration: none;
     color: inherit;
-    }
-.es-floting-button:hover{
+}
+
+.es-floting-button:hover {
     background: #FFF;
     /*color: #03a025;*/
     color: #00a0d2;
     font-weight: bold;
 }
-.es_mailer:not(:first-of-type){
+
+.es_mailer:not(:first-of-type) {
     margin-left: 1em;
 }
-.es-mailer-logo{
+
+.es-mailer-logo {
     display: inline-block;
     padding: 0 1em;
     text-align: center;
 }
-.es-mailer-logo img{
+
+.es-mailer-logo img {
     max-height: 40px;
     max-width: 90%;
 }
-.es-mailer-logo.es_recommended .es-logo-wrapper{
+
+.es-mailer-logo.es_recommended .es-logo-wrapper {
     border-color: #FF982D;
 }
-.es-logo-wrapper{
-     min-width: 120px;
-    min-height: 70px;
+
+.es-logo-wrapper {
+    min-width: 120px;
+    min-height: 50px;
     display: flex;
     justify-content: center;
     border: 1px solid #eaeaea;
@@ -1241,20 +1310,22 @@ div.es .last {
     border-radius: 4px;
 }
 
-.ig_es_docblock{
+.ig_es_docblock {
     border: 1px solid #d2d2d2;
     max-width: 68%;
     padding: 0.6em;
     border-radius: 5px;
     font-size: 1em;
     color: #737373;
-}    
-#post_digest{
+}
+
+#post_digest {
     background: #fbf8de;
     padding: 5px;
     width: 50%;
 }
-.post_digest_block{
+
+.post_digest_block {
     margin: 0.6em;
     background: #eaeaea;
     width: 40%;
@@ -1262,28 +1333,32 @@ div.es .last {
 }
 
 /* Email Subscribers new css : Start*/
-.es_settings_field{
+.es_settings_field {
     margin-bottom: 0.8em;
 }
-.es_settings_left_pan{
+
+.es_settings_left_pan {
     width: 75%;
     display: inline-block;
     float: left;
 }
-.es_settings_field input[type="text"], .es_settings_field input[type="email"]{
+
+.es_settings_field input[type="text"], .es_settings_field input[type="email"] {
     width: 100%;
     padding: 10px;
     font-size: 16px;
     height: auto;
     line-height: 1;
 }
-.es_settings_field label{
+
+.es_settings_field label {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: .3px;
     line-height: 2.2;
 }
-.es_settings_right_pan{
+
+.es_settings_right_pan {
     /*padding: 1.5em;*/
     /*background: #FFF;*/
     /*border-left: 1px solid #e6e6e6;*/
@@ -1294,7 +1369,8 @@ div.es .last {
     margin-left: 2em;
     /*float: right;*/
 }
-.es_settings_field select{
+
+.es_settings_field select {
     height: 3em;
     margin-bottom: 7px;
     padding-right: 20px;
@@ -1302,12 +1378,14 @@ div.es .last {
     width: 100%;
     max-width: 100%;
 }
-.es_campaign_name_wrapper{
+
+.es_campaign_name_wrapper {
     margin-bottom: 1em;
     padding-bottom: 1em;
     border-bottom: 1px solid #afafaf;
 }
-.es_campaign_name_wrapper .es_newsletter_name{
+
+.es_campaign_name_wrapper .es_newsletter_name {
     width: 80%;
     /* margin-right: 1em; */
     /* border: none !important; */
@@ -1321,7 +1399,8 @@ div.es .last {
     height: auto;
     line-height: 1;
 }
-.es_primary_btn{
+
+.es_primary_btn {
     font-size: 1.2em;
     color: #FFFFFF;
     border-color: #03a025 !important;
@@ -1338,11 +1417,13 @@ div.es .last {
     /* line-height: 0.6em; */
 
 }
-.es_primary_btn:hover{
+
+.es_primary_btn:hover {
     color: #03a025;
     background: #FFF;
 }
-.es_secondary_btn{
+
+.es_secondary_btn {
     padding: 9px 18px;
     font-size: 13px;
     border-radius: 3px;
@@ -1351,49 +1432,425 @@ div.es .last {
     cursor: pointer;
     margin-top: 1em;
 }
-.es_secondary_btn:hover{
+
+.es_secondary_btn:hover {
     color: #000;
     background: #FFF;
 }
 
-/* Contact reports */
-.es-contact-reports{
-    border-top: 2px solid #ccc;
-    margin-top: 1em;
-    padding-bottom: 1.2em;
-    /*border-bottom: 1px solid #ccc;*/
-}
-.es-contact-reports h2{
-    margin:0.6em 0;
-}
-.es-contact-reports .es_total_contact{
-    width: 8em;
-    float: left;
-    border-right: 1px dashed #CCC;
-    height: 7em;
-    margin-left: 1em;
-}
-.es-contact-reports .es_total_contact .es_contact_kpi_no{
-    font-size: 3em;
-    line-height: 1em;
-}
-.es-contact-reports .es_last_60_days{
-    width: 70%;
-    margin-left: 2em;
-    display: inline-block;
-}
-.es_contact_kpi{
-    width: auto;
-    display: inline-block;
-    margin-right: 1em;
-    min-width: 4em;
-}
-.es_contact_kpi .es_contact_kpi_no{
-    font-size: 1.5em;
-    line-height: 1.8em;
-    font-weight:500;
-}
-.es_contact_kpi .es_contact_kpi_text{
-    color: #636363;
-}
+
 /* Email Subscribers new css : End*/
+
+table.ig_es_form_table td {
+    padding: 15px 10px 15px 0px;
+}
+
+
+/* Workflow  CSS Start */
+.ig-es-table {
+    line-height: 1.3;
+    color: #515151;
+    background: #fff;
+    border: 0;
+    border-spacing: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.ig-es-table--bordered {
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.ig-es-table a {
+    text-decoration: none;
+}
+
+.ig-es-table .ig-es-table__col {
+    vertical-align: top;
+    border: 0 none;
+    border-top: 1px solid #f2f2f2;
+    padding: 18px 20px 18px 20px;
+    float: none;
+}
+
+.ig-es-table .ig-es-table__col--label {
+    border-top-color: #F0F0F0;
+    width: 31.5%;
+    line-height: 1.15;
+    font-size: 13px;
+    font-weight: 600;
+    border-right: 1px solid #e6e6e6;
+    background: #F9F9F9;
+}
+
+.ig-es-table .ig-es-table__col--label .ig-es-help-tip {
+    margin: 0;
+    position: relative;
+}
+
+.ig-es-table .ig-es-table__col--field {
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.ig-es-table .ig-es-table__row:first-child .ig-es-table__col {
+    border-top: none;
+}
+
+#post-body .postbox h3.hndle {
+    border-bottom: 1px solid #E1E1E1;
+    padding: 9px 15px;
+}
+
+#post-body .postbox.no-drag .hndle {
+    cursor: default;
+}
+
+#post-body .postbox .inside {
+    padding: 0;
+    margin: 0;
+}
+
+.postbox .ig-es-metabox-footer {
+    padding: 9px 15px;
+    background: #f5f5f5;
+    border-top: 1px solid #E1E1E1;
+    text-align: right;
+}
+
+.postbox .ig-es-metabox-pad {
+    padding: 20px;
+}
+
+.postbox h2.hndle small {
+    font-weight: normal;
+    padding-left: 1px;
+}
+
+.postbox h2.hndle .ig-es-help-link {
+    position: relative;
+    top: 2px;
+    left: -11px;
+}
+
+.ig-es-field {
+    margin: 1px;
+    width: 100%;
+}
+
+.ig-es-field--invalid {
+    border-color: #dc3232 !important;
+    -webkit-box-shadow: 0 0 2px #F55E4F !important;
+    box-shadow: 0 0 2px #F55E4F !important;
+}
+
+.ig-es-field--type-text,
+.ig-es-field--type-number {
+    height: 28px;
+}
+
+.ig-es-field--monospace {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+.wp-admin select.ig-es-field {
+    max-width: 100%;
+}
+
+.ig-es-field-errors {
+    margin-top: 7px;
+    color: #dc3232;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.ig-es-field-errors__error {
+    margin-top: 4px;
+}
+
+.ig-es-action__fields {
+    border: 1px solid #E1E1E1;
+    border-top: none;
+}
+
+.es-actions-container {
+    padding: 10px 15px;
+}
+
+.es-rules-container {
+    padding: 14px 20px 9px;
+}
+
+body.email-subscribers_page_es_workflows #post-body .postbox .inside {
+    padding: 0;
+    margin: 0;
+}
+
+.field-gap {
+    margin: 8px 0;
+}
+
+.field-cols .col-1, .field-cols .col-2 {
+    float: left;
+    width: 48%;
+}
+
+.field-cols .col-2 {
+    float: right;
+}
+
+.ig-es-field-description {
+    color: #8e8e8e;
+    font-size: 13px;
+    margin: 7px 1px 0;
+    font-style: italic;
+}
+
+.ig-es-time-field-group {
+    *zoom: 1;
+}
+
+.ig-es-time-field-group:before,
+.ig-es-time-field-group:after {
+    content: " ";
+    display: table;
+}
+
+.ig-es-time-field-group:after {
+    clear: both;
+}
+
+.ig-es-time-field-group__fields {
+    max-width: 140px;
+}
+
+.ig-es-time-field-group .ig-es-field {
+    width: 44%;
+    float: left;
+}
+
+.ig-es-time-field-group__sep {
+    float: left;
+    text-align: center;
+    width: 6%;
+    margin-top: 6px;
+}
+
+.ig-es-time-field-group__24hr-note {
+    font-weight: normal !important;
+    font-size: 12px;
+    margin-left: 7px;
+    display: inline-block;
+    margin-top: 11px;
+}
+
+.ig-es-label {
+    display: block;
+    font-weight: 600;
+    margin: 0 0 7px;
+    font-size: 13px;
+}
+
+.ig-es-action-template {
+    display: none;
+}
+
+.ig-es-actions-container {
+    padding: 10px 15px;
+}
+
+.ig-es-action {
+    margin: 5px 0 10px;
+}
+
+.ig-es-action .wp-editor-container iframe {
+    min-height: 300px;
+}
+
+.ig-es-action.js-open .ig-es-action__header h4,
+.ig-es-action.js-open .ig-es-action__header a {
+    color: white;
+}
+
+.ig-es-action__header {
+    position: relative;
+    padding: 14px 17px;
+    border: 1px solid #E1E1E1;
+    cursor: pointer;
+}
+
+.ig-es-action__header h4 {
+    font-size: 14px;
+    margin: 0;
+    display: inline-block;
+}
+
+.ig-es-action__header .row-options {
+    float: right;
+    font-size: 12px;
+}
+
+.ig-es-action__header .row-options a {
+    text-decoration: none;
+    margin: 0 4px;
+    box-shadow: none;
+}
+
+.ig-es-action .ig-es-action__fields:not([style*='display']) {
+    display: none;
+}
+
+.ig-es-switch {
+    cursor: pointer;
+    text-indent: -999em;
+    display: block;
+    width: 38px;
+    height: 22px;
+    border-radius: 30px;
+    border: none;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    -webkit-box-shadow: inset 0 0 0 0 transparent;
+    box-shadow: inset 0 0 0 0 transparent;
+}
+
+.ig-es-switch:focus {
+    outline: none;
+}
+
+.ig-es-switch:before {
+    border-radius: 50%;
+    background: #ffffff;
+    content: '';
+    position: absolute;
+    display: block;
+    width: 18px;
+    height: 18px;
+    top: 2px;
+    left: 2px;
+    -webkit-transition: all .15s ease;
+    transition: all .15s ease;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ig-es-switch[data-ig-es-switch="active"] {
+    -webkit-box-shadow: inset 0 0 0 11px #5850ec;
+    box-shadow: inset 0 0 0 11px #5850ec;
+}
+
+.ig-es-switch[data-ig-es-switch="active"]:before {
+    -webkit-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+.ig-es-switch[data-ig-es-switch="inactive"] {
+    background: #ccc;
+}
+
+.ig-es-switch.ig-es-loading {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.es-items-lists table.fixed,
+.post-type-es_template table.fixed {
+    position: static;
+}
+
+/** Workflow CSS END */
+
+.frappe-chart .x.axis .line-vertical,
+.frappe-chart .x.axis text {
+    display: none;
+}
+
+/*
+.frappe-chart .y.axis .line-horizontal,
+.frappe-chart .y.axis text {
+    display: none;
+}
+*/
+
+
+li.menu-top div.wp-menu-image img {
+    border-style: none !important;
+    display: inline;
+}
+
+/** Broadcast New UI CSS */
+/* input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+    display: none;
+    -webkit-appearance: none;
+}  */
+
+/*#progressbar {
+    counter-reset: step;
+}*/
+#progressbar li:before {
+   /* content: counter(step);
+    counter-increment: step;*/
+    width: 20px;
+    line-height: 20px;
+    display: inline-block;
+    font-size: 10px;
+    color: #333;
+    background: white;
+    border-radius: 3px;
+    margin: 0 auto 5px auto;
+}
+/* color change after active */
+#progressbar li.active{
+    border-bottom: 2px solid #5a67d8;
+}
+#progressbar li:hover {
+  border-bottom: 2px solid rgb(90, 103,216, 0.5);
+}
+
+#progressbar li.active span{
+    color: #2d3748;
+}
+
+#preview_template, #spam_score_modal{
+    display: none;
+}
+
+.broadcast_preview_container {
+    height: 300px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+/* Broadcast status icons CSS */
+body.email-subscribers_page_es_campaigns .column-status .dashicons {
+    position: relative;
+    left: 10px;
+}
+
+body.email-subscribers_page_es_campaigns .column-status .dashicons[title="Finished"] {
+    color: #0e9f6e;
+}
+div.broadcast_main_content{
+    width: 70% ;
+}
+
+div.broadcast_side_content{
+        width: 30% ;
+}
+
+.es-preview.broadcast-preview p {
+    margin : 1em 0 !important;
+}
+
+.es-preview.broadcast-preview img.aligncenter {
+    margin-left: auto;
+    margin-right: auto;
+}

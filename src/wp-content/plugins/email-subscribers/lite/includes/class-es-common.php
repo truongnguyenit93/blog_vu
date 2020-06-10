@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 4.0
  */
-Class ES_Common {
+class ES_Common {
 	/**
 	 * Convert email subscribe templates.
 	 *
@@ -41,7 +41,8 @@ Class ES_Common {
 	 * @since 4.0.0
 	 */
 	public static function es_process_template_body( $content, $tmpl_id = 0, $campaign_id = 0 ) {
-		$content = convert_chars( convert_smilies( wptexturize( $content ) ) );
+		$content = convert_smilies( wptexturize( $content ) );
+
 		if ( isset( $GLOBALS['wp_embed'] ) ) {
 			$content = $GLOBALS['wp_embed']->autoembed( $content );
 		}
@@ -121,7 +122,7 @@ Class ES_Common {
 
 		$dropdown = '';
 		foreach ( $statuses as $key => $status ) {
-			$dropdown .= "<option value='{$key}'";
+			$dropdown .= "<option class='text-sm' value='{$key}'";
 
 			if ( strtolower( $selected ) === strtolower( $key ) ) {
 				$dropdown .= "selected = selected";
@@ -195,6 +196,7 @@ Class ES_Common {
 
 		return $dropdown;
 	}
+
 
 	/**
 	 * Generate GUID
@@ -338,7 +340,8 @@ Class ES_Common {
 			$category_names = array();
 		}
 		$checked_selected = ! in_array( 'All', $category_names ) ? "checked='checked'" : '';
-		$category_html    = '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><input class="es-note-category-parent" type="radio" ' . $checked_selected . ' value="selected_cat"  name="es_note_cat_parent">' . __( 'Select Categories', 'email-subscribers' ) . '</td></tr>';
+		$category_html    = '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;" ><span class="block ml-6 pr-4 text-sm font-normal text-gray-600 pb-1"><input class="es-note-category-parent form-radio text-indigo-600" type="radio" ' . $checked_selected . ' value="selected_cat"  name="es_note_cat_parent">' . __( 'Select Categories',
+				'email-subscribers' ) . '</td></tr>';
 		foreach ( $categories as $category ) {
 
 			if ( in_array( $category->term_id, $category_names ) ) {
@@ -347,10 +350,11 @@ Class ES_Common {
 				$checked = "";
 			}
 
-			$category_html .= '<tr class="es-note-child-category"><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><input type="checkbox" ' . $checked . ' value="' . $category->term_id . '" id="es_note_cat[]" name="es_note_cat[]">' . $category->name . '</td></tr>';
+			$category_html .= '<tr class="es-note-child-category"><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><span class="block ml-6 pr-4 text-sm font-normal text-gray-600 pb-1"><input type="checkbox" class="form-checkbox" ' . $checked . ' value="' . $category->term_id . '" id="es_note_cat[]" name="es_note_cat[]">' . $category->name . '</td></tr>';
 		}
 		$checked_all = in_array( 'All', $category_names ) ? "checked='checked'" : '';
-		$all_html    = '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><input class="es-note-category-parent" type="radio" ' . $checked_all . ' value="{a}All{a}"  name="es_note_cat_parent">' . __( 'All Categories (Also include all categories which will create later)', 'email-subscribers' ) . '</td></tr>';
+		$all_html    = '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><span class="block ml-6 pr-4 text-sm font-normal text-gray-600 pb-1"><input type="radio" class="form-radio text-indigo-600 es-note-category-parent"  ' . $checked_all . ' value="{a}All{a}"  name="es_note_cat_parent">' . __( 'All Categories (Also include all categories which will create later)',
+				'email-subscribers' ) . '</td></tr>';
 
 		return $all_html . $category_html;
 	}
@@ -378,11 +382,11 @@ Class ES_Common {
 				} else {
 					$checked = "";
 				}
-				$custom_post_type_html .= '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><input type="checkbox" ' . $checked . ' value="{T}' . $post_type . '{T}" id="es_note_cat[]" class="es_custom_post_type" name="es_note_cat[]">' . $post_type . '</td></tr>';
+				$custom_post_type_html .= '<tr><td style="padding-top:4px;padding-bottom:4px;padding-right:10px;"><span class="block ml-12 pr-4 text-sm font-medium text-gray-600 pb-2"><input type="checkbox" ' . $checked . ' value="{T}' . $post_type . '{T}" id="es_note_cat[]" class="es_custom_post_type form-checkbox" name="es_note_cat[]">' . $post_type . '</td></tr>';
 			}
 
 		} else {
-			$custom_post_type_html = '<tr>' . __( 'No Custom Post Types Available', 'email-subscribers' ) . '</tr>';
+			$custom_post_type_html = '<tr><span class="block ml-12 pr-4 text-sm font-normal text-gray-600 pb-2">' . __( 'No Custom Post Types Available', 'email-subscribers' ) . '</tr>';
 		}
 
 		return $custom_post_type_html;
@@ -893,8 +897,8 @@ Class ES_Common {
 			$is_imp          = ! empty( $navigation['is_imp'] ) ? $navigation['is_imp'] : false;
 			?>
 
-            <a href="<?php echo $url; ?>" class="page-title-action<?php if ( $is_imp ) {
-				echo " es-imp-button";
+            <a href="<?php echo $url; ?>" class="ig-es-title-button px-2 py-2 mx-2<?php if ( $is_imp ) {
+				echo " ig-es-imp-button";
 			} ?>"><?php echo $action_label; ?>
 				<?php if ( $show_indicator ) { ?>
                     <span class="ig-es-indicator <?php echo $indicator_class; ?>">
@@ -1022,13 +1026,15 @@ Class ES_Common {
 				} elseif ( 'feedback' === $params['type'] ) {
 					$feedback->render_general_feedback( $params );
 				} elseif ( 'fb' === $params['type'] ) {
-
 					/**
 					 * We are not calling home for this event and we want to show
 					 * this Widget only once. So, we are storing feedback data now.
 					 */
 					$feedback->set_feedback_data( 'ig_es', $event );
 					$feedback->render_fb_widget( $params );
+				} elseif ( 'poll' === $params['type'] ) {
+					$feedback->set_feedback_data( 'ig_es', $event );
+					$feedback->render_poll_widget( $params );
 				}
 			}
 		}
@@ -1195,12 +1201,14 @@ Class ES_Common {
 		if ( $is_administrator ) {
 			$sub_menus = array(
 				'dashboard',
+				'workflows',
 				'audience',
 				'reports',
 				'forms',
 				'campaigns',
 				'sequences',
-				'settings'
+				'settings',
+				'ig_redirect',
 			);
 
 			return $sub_menus;
@@ -1223,12 +1231,307 @@ Class ES_Common {
 	 */
 	public static function generate_hash( $length ) {
 
-		$length   = ( $length ) ? $length : 12;
-		$auth_key = '';
-		if ( defined( 'AUTH_KEY' ) ) {
-			$auth_key = AUTH_KEY;
+		$length = ( $length ) ? $length : 12;
+
+		return substr( md5( uniqid() . uniqid() . wp_rand( $length, 64 ) ), 0, $length );
+	}
+
+	/**
+	 * Get useful article links
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.2
+	 */
+	public static function get_useful_articles() {
+
+		$articles = array(
+			array( 'title' => __( '8 Tips To Improve Email Open Rates', 'email-subscribers' ), 'link' => 'https://www.icegram.com/2bx5' ),
+			array( 'title' => __( 'Prevent Your Email From Landing In Spam', 'email-subscribers' ), 'link' => 'https://www.icegram.com/2bx6' ),
+			array( 'title' => __( '<b>Email Subscribers Secret Club</b>', 'email-subscribers' ), 'link' => 'https://www.facebook.com/groups/2298909487017349/', 'label' => __( 'Join Now', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' ),
+			array( 'title' => __( 'Best Way To Keep Customers Engaged', 'email-subscribers' ), 'link' => 'https://www.icegram.com/ymrn' ),
+			array( 'title' => __( 'Access Control', 'email-subscribers' ), 'link' => 'https://www.icegram.com/81z9' ),
+			array( 'title' => __( 'Prevent Spam Subscription Using Captcha', 'email-subscribers' ), 'link' => 'https://www.icegram.com/3jy4' ),
+			array( 'title' => __( 'Email Subscribers PRO', 'email-subscribers' ), 'link' => 'https://www.icegram.com/er6r', 'label' => __( 'Lifetime', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' )
+		);
+
+		return $articles;
+
+	}
+
+	/**
+	 * Get utm tracking url
+	 *
+	 * @param array $utm_args
+	 *
+	 * @return mixed|string
+	 *
+	 * @since 4.4.5
+	 */
+	public static function get_utm_tracking_url( $utm_args = array() ) {
+
+		$url          = ! empty( $utm_args['url'] ) ? $utm_args['url'] : 'https://icegram.com/email-subscribers-pricing/';
+		$utm_source   = ! empty( $utm_args['utm_source'] ) ? $utm_args['utm_source'] : 'in_app';
+		$utm_medium   = ! empty( $utm_args['utm_medium'] ) ? $utm_args['utm_medium'] : '';
+		$utm_campaign = ! empty( $utm_args['utm_campaign'] ) ? $utm_args['utm_campaign'] : 'es_upsell';
+
+		if ( ! empty( $utm_source ) ) {
+			$url = add_query_arg( 'utm_source', $utm_source, $url );
 		}
 
-		return substr( md5( $auth_key . wp_rand( $length, 64 ) ), 0, $length );
+		if ( ! empty( $utm_medium ) ) {
+			$url = add_query_arg( 'utm_medium', $utm_medium, $url );
+		}
+
+		if ( ! empty( $utm_campaign ) ) {
+			$url = add_query_arg( 'utm_campaign', $utm_campaign, $url );
+		}
+
+		return $url;
+
 	}
+
+	/**
+	 * Get Captcha setting
+	 *
+	 * @param $id null|int
+	 * @param $data array
+	 *
+	 * @return bool|mixed|void
+	 *
+	 * @since 4.4.7
+	 */
+	public static function get_captcha_setting( $form_id = null, $data = array() ) {
+
+		if ( ! empty( $form_id ) ) {
+
+			$form_id = (int) $form_id;
+
+			$form_data = ES()->forms_db->get_form_by_id( $form_id );
+
+			$settings = ig_es_get_data( $form_data, 'settings', array() );
+
+			if ( ! empty( $settings ) ) {
+
+				$settings = maybe_unserialize( $settings );
+
+				if ( isset( $settings['captcha'] ) ) {
+					return empty( $settings['captcha'] ) ? 'no' : $settings['captcha'];
+				}
+
+			}
+
+			return get_option( 'ig_es_enable_captcha', 'no' );
+		}
+
+		if ( ! isset( $data['captcha'] ) || empty( $data['captcha'] ) ) {
+			$setting = get_option( 'ig_es_enable_captcha', 'no' );
+		} else {
+			$setting = $data['captcha'];
+		}
+
+		return $setting;
+	}
+
+	public static function convert_date_to_wp_date( $date ) {
+		$convert_date_format = get_option( 'date_format' );
+		$convert_time_format = get_option( 'time_format' );
+
+		return date_i18n( "$convert_date_format $convert_time_format", strtotime( $date ) );
+	}
+
+	/**
+	 * Method to convert emojis character into their equivalent HTML entity in the given string if conversion supported
+	 * else remove them
+	 *
+	 * @param string $string String with emojis characters.
+	 *
+	 * @return string $string Converted string with equivalent HTML entities
+	 *
+	 * @since 4.4.7
+	 */
+	public static function handle_emoji_characters( $string = '' ) {
+
+		if ( ! empty( $string ) ) {
+			if ( function_exists( 'wp_encode_emoji' ) ) {
+				$string = wp_encode_emoji( $string );
+			} else {
+				$string = preg_replace( '%(?:
+						\xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
+					| [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+					| \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
+				)%xs', '', $string );
+			}
+		}
+
+		return $string;
+	}
+
+	/**
+	 * Get Campaign type
+	 *
+	 * @param bool $reverse
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.8
+	 */
+	public static function get_campaign_type_key_name_map( $reverse = false ) {
+
+		$campaign_type = array(
+			'newsletter'        => __( 'Broadcast', 'email-subscribers' ),
+			'post_notification' => __( 'Post Notification', 'email-subscribers' ),
+			'sequence'          => __( 'Sequence', 'email-subscribers' ),
+			'post_digest'       => __( 'Post Digest', 'email-subscribers' ),
+		);
+
+		if ( $reverse ) {
+			$campaign_type = array_flip( $campaign_type );
+		}
+
+		return $campaign_type;
+	}
+
+	/**
+	 * Prepare Campaign Status dropdown
+	 *
+	 * @param string $selected
+	 * @param string $default_label
+	 *
+	 * @return string
+	 *
+	 * @since 4.4.8
+	 */
+	public static function prepare_campaign_type_dropdown_options( $selected = '', $default_label = '' ) {
+
+		$campaign_type = self::get_campaign_type_key_name_map();
+
+		$dropdown = '<option class="text-sm" value="">All Types</option>';
+		foreach ( $campaign_type as $key => $type ) {
+
+			$dropdown .= "<option class='text-sm' value='{$key}'";
+
+			if ( strtolower( $selected ) === strtolower( $key ) ) {
+				$dropdown .= "selected = selected";
+			}
+
+			$dropdown .= ">{$type}</option>";
+		}
+
+		return $dropdown;
+	}
+
+	/**
+	 * Get Campaign Statuses
+	 *
+	 * @param string $campaign_type
+	 * @param bool $reverse
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.8
+	 */
+	public static function get_campaign_statuses_key_name_map( $reverse = false ) {
+
+		$statuses = array(
+			'0' => __( 'Draft', 'email-subscribers' ),
+			'3' => __( 'Sending', 'email-subscribers' ),
+			'2' => __( 'Scheduled', 'email-subscribers' ),
+			'5' => __( 'Sent', 'email-subscribers' ),
+			'1' => __( 'Active', 'email-subscribers' ),
+		);
+
+
+		if ( $reverse ) {
+			$statuses = array_flip( $statuses );
+		}
+
+		return $statuses;
+	}
+
+	/**
+	 * Prepare Campaign Status dropdown
+	 *
+	 * @param string $selected
+	 * @param string $default_label
+	 *
+	 * @return string
+	 *
+	 * @since 4.4.8
+	 */
+	public static function prepare_campaign_statuses_dropdown_options( $selected = '', $default_label = '' ) {
+
+		$statuses = self::get_campaign_statuses_key_name_map();
+
+		$dropdown = '<option class="text-sm" value="">All Statuses</option>';
+
+		foreach ( $statuses as $key => $status ) {
+
+			$dropdown .= "<option class='text-sm' value='{$key}'";
+
+			if ( strtolower( $selected ) === strtolower( $key ) ) {
+				$dropdown .= "selected = selected";
+			}
+
+			$dropdown .= ">{$status}</option>";
+		}
+
+		return $dropdown;
+	}
+
+	/**
+	 * Can show coupon code?
+	 *
+	 * @param string $coupon_code
+	 *
+	 * @return bool
+	 *
+	 * @since 4.4.8
+	 */
+	public static function can_show_coupon( $coupon = 'PREMIUM10' ) {
+		$coupons = get_option( 'ig_es_coupons', array() );
+
+		$can_show = true;
+
+		if ( ! empty( $coupons ) ) {
+
+			if ( isset( $coupons[ $coupon ] ) ) {
+				$last_shown_time = $coupons[ $coupon ]['last_shown_time'];
+
+				if ( $last_shown_time <= time() - ( 7 * 24 * 60 * 60 ) ) {
+					$can_show = true;
+				} else {
+					$can_show = false;
+				}
+			} else {
+				$can_show = true;
+			}
+		}
+
+		if ( $can_show ) {
+			self::update_coupon_data( $coupon );
+		}
+
+		return $can_show;
+	}
+
+	/**
+	 * Update coupons data
+	 *
+	 * @param $coupon
+	 *
+	 * @since 4.4.8
+	 */
+	public static function update_coupon_data( $coupon ) {
+		$coupons = get_option( 'ig_es_coupons', array() );
+
+		$coupons[ $coupon ] = array(
+			'last_shown_time' => time(),
+			'count'           => $coupons[ $coupon ]['count'] + 1
+		);
+
+		update_option( 'ig_es_coupons', $coupons );
+	}
+
+
 }

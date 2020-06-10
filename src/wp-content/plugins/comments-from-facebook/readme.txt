@@ -2,8 +2,8 @@
 Contributors: wpdevart
 Tags: Facebook, facebook comments, facebook comment plugin, comments, wordpress comments 
 Requires at least: 2.9
-Tested up to: 5.3.2
-Stable tag: 1.9.5
+Tested up to: 5.4
+Stable tag: 1.9.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -30,7 +30,7 @@ You can disable it on any page/post you need. There are some useful features tha
 * **Ability to set ordering and number to display**
 * **Ability to set the language**
 
-You can upgrade the plugin to [Facebook Comments Pro](http://wpdevart.com/wordpress-facebook-comments-plugin) to add more features.
+You can upgrade the plugin to [Facebook Comments Pro](https://wpdevart.com/wordpress-facebook-comments-plugin) to add more features.
 
 ### Features of Pro version
 
@@ -411,6 +411,18 @@ Yes, If you are logged in(Fb account) then you will see the moderate options for
 = 1.9.5 ==
 
 *  Edited the plugin admin.
+
+= 1.9.6 ==
+
+*  Change some default options.
+
+= 1.9.7 ==
+
+*  Added featured plugin.
+
+= 1.9.8 ==
+
+*  Changed some default options.
 
 ==Step by step guide==
 

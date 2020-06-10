@@ -8,7 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
-
 class ES_Contacts_Table extends WP_List_Table {
 	/**
 	 * @since 4.0.0
@@ -165,22 +164,23 @@ class ES_Contacts_Table extends WP_List_Table {
 	public function render() {
 
 		?>
-        <div class="wrap">
+		<div class="wrap">
 
-		<?php
+			<?php
 
-		$action = ig_es_get_request_data( 'action' );
-		if ( 'import' === $action ) {
-			$this->load_import();
-		} elseif ( 'export' === $action ) {
-			$this->load_export();
-		} elseif ( 'new' === $action || 'edit' === $action ) {
-			$contact_id = absint( ig_es_get_request_data( 'subscriber' ) );
-			$this->save_contact( $contact_id );
-		} elseif ( 'sync' === $action ) {
+			$action = ig_es_get_request_data( 'action' );
+			if ( 'import' === $action ) {
+				$this->load_import();
+			} elseif ( 'export' === $action ) {
+				$this->load_export();
+			} elseif ( 'new' === $action || 'edit' === $action ) {
+				$contact_id = absint( ig_es_get_request_data( 'subscriber' ) );
+				$this->save_contact( $contact_id );
+			} elseif ( 'sync' === $action ) {
 			update_option( 'ig_es_show_sync_tab', 'no' ); // yes/no
 			$this->load_sync();
 		} else {
+
 
 			$audience_tab_main_navigation = array();
 			$active_tab                   = '';
@@ -188,35 +188,40 @@ class ES_Contacts_Table extends WP_List_Table {
 
 			?>
 
-            <h1 class="wp-heading-inline">
-				<?php
-				_e( 'Audience > Contacts', 'email-subscribers' );
-				ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
-				?>
-            </h1>
+			<h2 class="wp-heading-inline">
+				<span class="text-base font-normal text-indigo-600 sm:leading-7 sm:truncate"><?php 
+				_e( 'Audience <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 inline-block align-middle text-gray-900"><path d="M9 5l7 7-7 7"></path></svg>', 'email-subscribers' ); ?>
+				 </span>
+				 <span class="text-2xl font-medium text-gray-900 sm:leading-9 sm:truncate">
+			<?php 
+			_e( 'Contacts', 'email-subscribers' ); ?>
+		</span>
+			<?php ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
+			?>
+		</h2>
 
-            <div class="es-contact-reports">
-				<?php $this->get_contacts_reports() ?>
-            </div>
+		<div class="my-4">
+			<?php $this->get_contacts_reports() ?>
+		</div>
 
-            <div id="poststuff" class="es-audience-view">
-                <div id="post-body" class="metabox-holder column-1">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post">
-								<?php
-								$this->prepare_items();
-								$this->display();
-								?>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-            </div>
-		<?php }
-	}
+		<div id="poststuff" class="es-audience-view es-items-lists">
+			<div id="post-body" class="metabox-holder column-1">
+				<div id="post-body-content">
+					<div class="meta-box-sortables ui-sortable">
+						<form method="post">
+							<?php
+							$this->prepare_items();
+							$this->display();
+							?>
+						</form>
+					</div>
+				</div>
+			</div>
+			<br class="clear">
+		</div>
+	</div>
+<?php }
+}
 
 	/**
 	 * Load Export Feature
@@ -259,26 +264,56 @@ class ES_Contacts_Table extends WP_List_Table {
 		$es_total_unsubscribed_contacts  = ES_Reports_Data::get_total_unsubscribed_contacts( 60 );
 		$es_total_contacts_opened_emails = ES_Reports_Data::get_total_contacts_opened_emails( 60 );
 		?>
-        <div class="es_total_contact">
-            <h2 class="es_contact_kpi_text"><?php _e( 'Contacts', 'email-subscribers' ); ?></h2>
-            <span class="es_contact_kpi_no"><?php echo $es_total_contact; ?></span></br>
-        </div>
-        <div class="es_last_60_days">
-            <h2><?php _e( 'Last 60 Days', 'email-subscribers' ); ?></h2>
-            <div class="es_contact_kpi">
-                <span class="es_contact_kpi_no" style="color: #009e00"><?php echo $es_total_subscribed_contacts; ?></span></br>
-                <span class="es_contact_kpi_text"><?php _e( 'Subscribed', 'email-subscribers' ); ?></span>
-            </div>
-            <div class="es_contact_kpi">
-                <span class="es_contact_kpi_no" style="color: #d40303"><?php echo $es_total_unsubscribed_contacts; ?></span></br>
-                <span class="es_contact_kpi_text"><?php _e( 'Unsubscribed', 'email-subscribers' ); ?></span>
-            </div>
-            <div class="es_contact_kpi">
-                <span class="es_contact_kpi_no" style="color: #006cc1"><?php echo $es_total_contacts_opened_emails; ?></span></br>
-                <span class="es_contact_kpi_text"><?php _e( 'Opened', 'email-subscribers' ); ?></span>
-            </div>
-			<?php do_action( 'ig_es_after_contacts_kpis' ); ?>
-        </div>
+		<div class="bg-white rounded-md shadow ">
+			<table class="min-w-full overflow-hidden bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow font-sans">
+				<tr>
+					<td class="w-1/5 border-r lg:px-4">
+						<div class="block pt-3 pb-2 pl-2"><span class="text-lg font-medium text-gray-400"><?php _e( 'Total Contacts', 'email-subscribers' ); ?></span></div>
+						<div class="flex pt-2 pb-2 h-20">
+							<div class="lg:pl-2 ">
+								<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400 mt-1"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+							</div>
+							<div>
+								<span class="text-4xl font-bold leading-none text-indigo-600 pl-4"><?php echo number_format($es_total_contact); ?></span>
+								
+							</div>
+						</div>
+					</td>
+					<td class="w-4/5">
+						<div class="block pt-4 pb-1"><span class="text-lg font-medium text-gray-400 pl-4"><?php _e( 'Last 60 Days', 'email-subscribers' ); ?></span></div>
+						<div class="flex">
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 border-r border-gray-200">
+								<div class="mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_subscribed_contacts); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Subscribed', 'email-subscribers' ); ?>
+								</div>	
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 mb-2 border-r border-gray-200">
+								<div class=" mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_unsubscribed_contacts); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Unsubscribed', 'email-subscribers' ); ?>
+								</div>
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 border-r border-gray-200">
+								<div class="mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_contacts_opened_emails); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Opened', 'email-subscribers' ); ?>
+								</div>
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3">
+								<?php do_action( 'ig_es_after_contacts_kpis' ); ?>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<?php
 	}
 
@@ -297,13 +332,14 @@ class ES_Contacts_Table extends WP_List_Table {
 		$is_new     = true;
 
 		if ( $id === 0 ) {
-			$title        = __( 'Add New Contact', 'email-subscribers' );
-			$title_action = '<a href="admin.php?page=es_lists&action=manage-lists" class="page-title-action es-imp-button">' . __( 'Manage Lists', 'email-subscribers' ) . '</a>';
+
+			$title        = __( ' Add New Contact', 'email-subscribers' );
+			$title_action = '<a href="admin.php?page=es_lists&action=manage-lists" class="ig-es-imp-button px-2 py-2">' . __( 'Manage Lists', 'email-subscribers' ) . '</a>';
 
 		} else {
 			$is_new       = false;
-			$title        = __( 'Edit Contact', 'email-subscribers' );
-			$title_action = '<a href="admin.php?page=es_subscribers&action=new" class="page-title-action">' . __( 'Add New', 'email-subscribers' ) . '</a>';
+			$title        = __( ' Edit Contact', 'email-subscribers' );
+			$title_action = '<a href="admin.php?page=es_subscribers&action=new" class="ig-es-title-button px-2 py-2 mx-2"> ' . __( 'Add New', 'email-subscribers' ) . '</a>';
 
 			$contact = $this->db->get( $id );
 
@@ -454,23 +490,41 @@ class ES_Contacts_Table extends WP_List_Table {
 
 		?>
 
-        <div class="wrap">
-            <h1 class="wp-heading-inline"><?php echo $title; ?><?php echo $title_action; ?></h1>
-            <hr class="wp-header-end">
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder column-1">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable es-contact-form">
-							<?php echo $this->prepare_contact_form( $data, $is_new ); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="wrap max-w-full mt-1 font-sans">
+			<header class="ml-12 mr-8 wp-heading-inline">
+				<div class="md:flex md:items-center md:justify-between justify-center">
+					<div class="flex-1 min-w-0">
+						<h2 class="text-2xl leading-7 text-gray-900 sm:leading-9 sm:truncate">
+							<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate">
+								<a href="admin.php?page=es_subscribers"><?php _e('Audience ','email-subscribers'); ?></a></span> <svg class="w-6 h-6 mt-2 inline-block" fill="currentColor" viewBox="0 0 24 24">
+											<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"
+											></path>
+										</svg>
+								<?php echo $title; ?>
+							</h2>
+						</div>
 
-		<?php
+						<div class="py-2 flex md:mt-0 pb-2">
+							<div id="ig-es-create-button" class="relative inline-block text-left">
+								<span class="rounded-md shadow-sm">
+									<?php
+									echo $title_action; ?>		
+								</span>
+							</div>
+						</div>
+					</div>
+				</header>
+				<div class="ml-12 mr-8"><hr class="wp-header-end"></div>
+				<div class="meta-box-sortables ui-sortable bg-white shadow-md ml-12 mr-8 mt-6 rounded-lg">
+					<?php echo $this->prepare_contact_form( $data, $is_new ); ?>
 
-	}
+				</div>
+				<?php
+
+			}
 
 	/**
 	 * Retrieve subscribers data from the database
@@ -583,7 +637,6 @@ class ES_Contacts_Table extends WP_List_Table {
 
 
 	public function prepare_contact_form( $data = array(), $is_new = false ) {
-
 		$id                 = ! empty( $data['id'] ) ? $data['id'] : '';
 		$created            = ! empty( $data['created'] ) ? $data['created'] : '';
 		$guid               = ! empty( $data['guid'] ) ? $data['guid'] : '';
@@ -599,56 +652,135 @@ class ES_Contacts_Table extends WP_List_Table {
 			//$list_html = ES_Shortcode::prepare_lists_checkboxes( $lists_id_name_map, array_keys( $lists_id_name_map ), 4, $selected_list_ids, $id, 'contact_data[lists][]' );
 			$list_html = $this->prepare_lists_html( $id );
 		} else {
-			$list_html = "<tr><td>" . __( 'No list found', 'email-subscribers' ) . "</td></tr>";
+			$list_html = "<tr><td><span class='text-sm leading-5 font-normal text-gray-500'>" . __( 'No list found', 'email-subscribers' ) . "</span></td></tr>";
 		}
 
 		?>
-        <form method="post" action="<?php echo $action; ?>">
-            <table class="ig-es-form-table form-table">
-                <tbody>
-                <tr class="form-field">
-                    <td><label><b><?php _e( 'First Name', 'email-subscribers' ); ?></b></label></td>
-                    <td><input type="text" class="ig-es-contact-first-name" id="ig-es-contact-first-name" name="contact_data[first_name]" value="<?php echo esc_attr( $first_name ); ?>"/></td>
-                </tr>
 
-                <tr class="form-field">
-                    <td><label><b><?php _e( 'Last Name', 'email-subscribers' ); ?></b></label></td>
-                    <td><input type="text" class="ig-es-contact-last-name" id="ig-es-contact-last-name" name="contact_data[last_name]" value="<?php echo esc_attr( $last_name ); ?>"/></td>
-                </tr>
+		
+		<form method="post" action="<?php echo $action; ?>" class="ml-5 mr-4 text-left pt-8 flex-row mt-2 item-center ">
+			<div class="flex flex-row border-b border-gray-100">
+				<div class="flex w-1/5">
+					<div class="ml-4 pt-6">
+						<label for="firstname"><span class="block ml-4 pt-1 pr-4 text-sm font-medium text-gray-600 pb-2"><?php _e( 'First Name', 'email-subscribers' ); ?></span></label>
 
-                <tr class="form-field">
-                    <td><label><b><?php _e( 'Email', 'email-subscribers' ); ?></b></label></td>
-                    <td><input type="email" id="email" name="contact_data[email]" value="<?php echo esc_attr( $email ); ?>"/></td>
-                </tr>
+					</div>
+				</div>
+				<div class="flex">
+					<div class="ml-16 mb-4 h-10 mr-4 mt-4">
+						<div class="h-10 relative">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<span class="inset-y-0 text-gray-400 sm:text-sm sm:leading-5">
+									<span class="my-2 mr-10 dashicons dashicons-admin-users"></span>
+								</span>
+							</div>
+							<input id="ig-es-contact-first-name" class="ig-es-contact-first-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"  placeholder="<?php _e('Enter First Name', 'email-subscribers'); ?>" name="contact_data[first_name]" value="<?php echo esc_attr( $first_name ); ?>" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-row border-b border-gray-100">
+				<div class="flex w-1/5">
+					<div class="ml-4 pt-6">
+						<label for="lastname"><span class="block ml-4 pt-1 pr-4 text-sm font-medium text-gray-600 pb-2"><?php _e( 'Last Name', 'email-subscribers' ); ?></span></label>
+					</div>
+				</div>
+				<div class="flex">
+					<div class="ml-16 my-4 h-10 mr-4">
+						<div class="h-10 relative">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<span class="inset-y-0 text-gray-400 sm:text-sm sm:leading-5">
+									<span class="my-2 mr-10 dashicons dashicons-admin-users"></span>
+								</span>
+							</div>
+							<input id="ig-es-contact-last-name" class="ig-es-contact-last-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5" placeholder="<?php _e('Enter Last Name', 'email-subscribers'); ?>" name="contact_data[last_name]" value="<?php echo esc_attr( $last_name ); ?>" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-row border-b border-gray-100">
+				<div class="flex w-1/5" >
+					<div class="ml-4 pt-6">
+						<label for="email"><span class="block ml-4 pt-1 pr-4 text-sm font-medium text-gray-600 pb-2"><?php _e( 'Email', 'email-subscribers' ); ?></span></label>
+					</div>
+				</div>
+				<div class="flex">
+					<div class="ml-16 my-4 mr-4">
+						<div class="h-10 relative">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<span class="inset-y-0 text-gray-400 sm:text-sm sm:leading-5">
+									<span class="my-2 mr-10 dashicons dashicons-email-alt"></span></span>
+								</div>
+								<input id="email" class="form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"" id="email" name="contact_data[email]" value="<?php echo esc_attr( $email ); ?>"  placeholder="<?php _e('Enter Email', 'email-subscribers'); ?>" />
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<?php if ( $is_new ) { ?>
-                    <tr class="form-field">
-                        <td><label><b><?php _e( 'Send Welcome Email?', 'email-subscribers' ); ?></b></label></td>
-                        <td><input type="checkbox" id="ig-es-contact-welcome-email" name="contact_data[send_welcome_email]" <?php if ( $send_welcome_email ) {
-								echo "checked='checked'";
-							} ?> /></td>
-                    </tr>
+					<div class="flex flex-row border-b border-gray-100">
+						<div class="flex w-1/5">
+							<div class="ml-4 pt-4">
+								<label for="send_email"><span class="block ml-4 pt-1 pr-4 text-sm font-medium text-gray-600 pb-2"><?php _e( 'Send Welcome Email?', 'email-subscribers' ); ?></span>
+								</label>
+							</div>
+						</div>
+						<div class="flex">
+							<div class="ml-16 my-4 mr-4">
+								<label for="send_email" class=" inline-flex items-center cursor-pointer">
+									<span class="relative">
+										<input id="send_email" type="checkbox" class="absolute es-check-toggle opacity-0 w-0 h-0" 
+										name="contact_data[send_welcome_email]" <?php if ( $send_welcome_email ) {
+											echo "checked='checked'";
+										} ?> />
+										<span class="es-mail-toggle-line block w-10 h-6 bg-gray-300 rounded-full shadow-inner"></span>
+										<span class="es-mail-toggle-dot absolute transition-all duration-300 ease-in-out block w-4 h-4 mt-1 ml-1 bg-white rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline"></span>	
+									</span>
+								</label>
+							</div>
+						</div>
+					</div>
 				<?php } ?>
-                <tr class="form-field">
-                    <td><label><b><?php _e( 'List(s)', 'email-subscribers' ); ?></b></label></td>
-                    <td>
-                        <table><?php echo $list_html; ?></table>
-                    </td>
-                </tr>
-                <tr class="form-field">
-                    <td></td>
-                    <td>
-                        <input type="hidden" name="contact_data[created_at]" value="<?php echo $created; ?>"/>
-                        <input type="hidden" name="contact_data[guid]" value="<?php echo $guid; ?>"/>
-                        <input type="hidden" name="submitted" value="submitted"/>
-                        <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'email-subscribers' ); ?>"/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-		<?php
-	}
+
+				<div class="flex flex-row border-b border-gray-100">
+					<div class="flex w-1/5">
+						<div class="ml-4 pt-6">
+							<label for="status">
+								<span class="block ml-4 pt-1 pr-4 text-sm font-medium text-gray-600 pb-2"> <?php  _e( 'List(s)', 'email-subscribers' ); ?></span></label>
+							</div>
+						</div>
+						<div class="flex">
+							<div class="ml-16 my-4 mr-4">
+								<div class=" relative">
+									<?php echo $list_html; ?>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="flex border-b border-gray-100">
+						<div class="ml-4 mb-4 pt-6">	
+							<input type="hidden" name="contact_data[created_at]" value="<?php echo $created; ?>" />
+							<input type="hidden" name="contact_data[guid]" value="<?php echo $guid; ?>" />
+							<input type="hidden" name="submitted" value="submitted" />
+							<input type="submit" name="submit" class="cursor-pointer align-middle px-4 my-2 py-2 mx-2 ig-es-primary-button hover:shadow-md" value="<?php if ( $is_new ) {  
+								_e( 'Save Contact', 'email-subscribers' ); 
+							}
+							else{
+								_e( 'Save Changes', 'email-subscribers' ); 
+							}
+							?>"/>
+							<a href="admin.php?page=es_subscribers" class="cursor-pointer align-middle rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a>
+						</div>
+					</div>
+				</form>
+			</div>
+			<?php
+
+		}
+
 
 	/**
 	 * No contacts available
@@ -674,15 +806,15 @@ class ES_Contacts_Table extends WP_List_Table {
 		$item = apply_filters( 'es_subscribers_col_data', $item, $column_name );
 		switch ( $column_name ) {
 			case 'lists':
-				return $this->get_lists_to_show( $item['id'] );
+			return $this->get_lists_to_show( $item['id'] );
 			case 'created_at':
-				return ig_es_format_date_time( $item[ $column_name ] );
+			return ig_es_format_date_time( $item[ $column_name ] );
 			case 'first_name':
 			case 'email':
 			default:
 				return $item[ $column_name ]; //Show the whole array for troubleshooting purposes
+			}
 		}
-	}
 
 	/**
 	 * Prepare lists html to set status
@@ -705,32 +837,32 @@ class ES_Contacts_Table extends WP_List_Table {
 				$list_contact_status_map = ES()->lists_contacts_db->get_list_contact_status_map( $contact_id );
 			}
 
-			$lists_html = "<div><table class='ig-es-form-list-html'><tr>";
+			$lists_html = "<table class='ig-es-form-list-html'><tr>";
 
 			$i = 0;
 			foreach ( $lists as $list_id => $list_name ) {
 				if ( $i != 0 && ( $i % $columns ) === 0 ) {
-					$lists_html .= "</tr><tr>";
+					$lists_html .= "</tr><tr class='mt-3'>";	
 				}
 
 				$selected = ! empty( $list_contact_status_map[ $list_id ] ) ? $list_contact_status_map[ $list_id ] : '';
 
-				$status_dropdown_html = "<select class='ig-es-statuses-dropdown' name='contact_data[lists][" . $list_id . "]' >";
+				$status_dropdown_html = "<select class='h-8 form-select w-40 mt-2 mr-8 shadow-sm border-gray-400 ig-es-statuses-dropdown shadow-sm  sm:text-sm sm:leading-5' name='contact_data[lists][" . $list_id . "]' >";
 				$status_dropdown_html .= ES_Common::prepare_statuses_dropdown_options( $selected );
 				$status_dropdown_html .= "</select>";
 
 				$status_span = '';
 				if ( ! empty( $list_contact_status_map[ $list_id ] ) ) {
-					$status_span = '<span class="es_list_contact_status ' . $list_contact_status_map[ $list_id ] . '" title="' . ucwords( $list_contact_status_map[ $list_id ] ) . '">';
+					$status_span = '<span class="border-gray-400 focus:bg-gray-100 es_list_contact_status ' . $list_contact_status_map[ $list_id ] . '" title="' . ucwords( $list_contact_status_map[ $list_id ] ) . '">';
 				}
 
 				$list_name  = strlen( $list_name ) > 15 ? substr( $list_name, 0, 15 ) . '...' : $list_name;
-				$lists_html .= "<td>$status_span$list_name</td><td>$status_dropdown_html</td>";
+				$lists_html .= "<td class='pr-1 pt-2 text-sm leading-5 font-normal text-gray-500'>$status_span$list_name</td><td>$status_dropdown_html</td>";
 
 				$i ++;
 			}
 
-			$lists_html .= "</tr></table></div>";
+			$lists_html .= "</tr></table>";
 		}
 
 		return $lists_html;
@@ -757,8 +889,10 @@ class ES_Contacts_Table extends WP_List_Table {
 				// Show only 4 lists
 				//$contact_lists_to_display = array_slice( $lists, 0, 4 );
 				foreach ( $lists as $list_id => $status ) {
+
 					if ( ! empty( $this->lists_id_name_map[ $list_id ] ) ) {
-						$list_str .= '<span class="es_list_contact_status ' . strtolower( $status ) . '" title="' . ucwords( $status ) . '">' . $this->lists_id_name_map[ $list_id ] . '</span> ';
+
+						$list_str .= '<span class="es_list_contact_status ' . strtolower( $status ) . '" title="' . ucwords( $status ) . '">' . $this->lists_id_name_map[ $list_id ] . '</span>';
 					}
 				}
 			}
@@ -800,11 +934,12 @@ class ES_Contacts_Table extends WP_List_Table {
 		$page = ig_es_get_request_data( 'page' );
 
 		$actions = array(
-			'edit'   => sprintf( __( '<a href="?page=%s&action=%s&subscriber=%s&_wpnonce=%s">Edit</a>', 'email-subscribers' ), esc_attr( $page ), 'edit', absint( $item['id'] ), $delete_nonce ),
+			'edit'   => sprintf( __( '<a href="?page=%s&action=%s&subscriber=%s&_wpnonce=%s" class="text-indigo-600">Edit</a>', 'email-subscribers' ), esc_attr( $page ), 'edit', absint( $item['id'] ), $delete_nonce ),
 			'delete' => sprintf( __( '<a href="?page=%s&action=%s&subscriber=%s&_wpnonce=%s" onclick="return checkDelete()">Delete</a>', 'email-subscribers' ), esc_attr( $page ), 'delete', absint( $item['id'] ), $delete_nonce ),
 		);
 
-		$actions['resend'] = sprintf( __( '<a href="?page=%s&action=%s&subscriber=%s&_wpnonce=%s">Resend Confirmation<a>', 'email-subscribers' ), esc_attr( ig_es_get_request_data( 'page' ) ), 'resend', absint( $item['id'] ), $delete_nonce );
+		$actions['resend'] = sprintf( __( '<a href="?page=%s&action=%s&subscriber=%s&_wpnonce=%s" class="text-indigo-600">Resend Confirmation<a>', 'email-subscribers' ), esc_attr( ig_es_get_request_data( 'page' ) ), 'resend', absint( $item['id'] ), $delete_nonce );
+
 
 		return $title . $this->row_actions( $actions );
 	}
@@ -876,23 +1011,23 @@ class ES_Contacts_Table extends WP_List_Table {
 	public function search_box( $text = '', $input_id = '' ) {
 
 		?>
-        <p class="search-box box-ma10">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
-            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box box-ma10">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( __( 'Search Contacts', 'email-subscribers' ), 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
-        </p>
-        <p class="search-box search-group-box box-ma10">
+		</p>
+		<p class="search-box search-group-box box-ma10">
 			<?php $filter_by_status = ig_es_get_request_data( 'filter_by_status' ); ?>
-            <select name="filter_by_status">
+			<select name="filter_by_status">
 				<?php echo ES_Common::prepare_statuses_dropdown_options( $filter_by_status, __( 'All Statuses', 'email-subscribers' ) ); ?>
-            </select>
-        </p>
-        <p class="search-box search-group-box box-ma10">
+			</select>
+		</p>
+		<p class="search-box search-group-box box-ma10">
 			<?php $filter_by_list_id = ig_es_get_request_data( 'filter_by_list_id' ); ?>
-            <select name="filter_by_list_id">
+			<select name="filter_by_list_id">
 				<?php echo ES_Common::prepare_list_dropdown_options( $filter_by_list_id, __( 'All Lists', 'email-subscribers' ) ); ?>
-            </select>
-        </p>
+			</select>
+		</p>
 
 	<?php }
 
@@ -1030,7 +1165,7 @@ class ES_Contacts_Table extends WP_List_Table {
 					$url      = add_query_arg( 'resend', true );
 					//redirect to resend link and avoid resending email
 					?>
-                    <meta http-equiv="refresh" content="0; url=<?php echo $url; ?>"/>
+					<meta http-equiv="refresh" content="0; url=<?php echo $url; ?>"/>
 					<?php
 				}
 

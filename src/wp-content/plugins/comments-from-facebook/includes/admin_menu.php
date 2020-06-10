@@ -9,7 +9,7 @@ class wpdevart_comment_admin_menu{
 	private $plugin_url;
 	private $text_parametrs;
 
-	/*###################### Constract params function ##################*/	
+	/*###################### Construct parameters function ##################*/	
 	
 	function __construct($param){
 		
@@ -94,7 +94,7 @@ class wpdevart_comment_admin_menu{
 		add_action('admin_print_styles-' .$page_wpdevart_comment, array($this,'menu_requeried_scripts'));		
 	}
 
-	/*###################### Requaried scripts function ##################*/	
+	/*###################### Required scripts function ##################*/	
 	
 	public function menu_requeried_scripts(){
 		wp_enqueue_script('wp-color-picker');		
@@ -409,6 +409,12 @@ Also, here is another tutorial(from other source) of creating App Id, you can ch
 						'title'			=>	'WordPress Gallery plugin',
 						'description'	=>	'Gallery plugin is an useful tool that will help you to create Galleries and Albums. Try our nice Gallery views and awesome animations.'
 						),		
+			'countdown-extended'=>array(
+						'image_url'		=>	$this->plugin_url.'images/featured_plugins/icon-128x128.png',
+						'site_url'		=>	'https://wpdevart.com/wordpress-countdown-extended-version/',
+						'title'			=>	'WordPress Countdown Extended',
+						'description'	=>	'Countdown extended is an fresh and extended version of countdown timer. You can easily create and add countdown timers to your website.'
+						),						
 			'coming_soon'=>array(
 						'image_url'		=>	$this->plugin_url.'images/featured_plugins/coming_soon.jpg',
 						'site_url'		=>	'http://wpdevart.com/wordpress-coming-soon-plugin/',
@@ -426,7 +432,13 @@ Also, here is another tutorial(from other source) of creating App Id, you can ch
 						'site_url'		=>	'http://wpdevart.com/wordpress-booking-calendar-plugin/',
 						'title'			=>	'WordPress Booking Calendar',
 						'description'	=>	'WordPress Booking Calendar plugin is an awesome tool to create a booking system for your website. Create booking calendars in a few minutes.'
-						),	
+						),
+			'Pricing Table'=>array(
+						'image_url'		=>	$this->plugin_url.'images/featured_plugins/Pricing-table.png',
+						'site_url'		=>	'https://wpdevart.com/wordpress-pricing-table-plugin/',
+						'title'			=>	'WordPress Pricing Table',
+						'description'	=>	'WordPress Pricing Table plugin is a nice tool for creating beautiful pricing tables. Use WpDevArt pricing table themes and create tables just in a few minutes.'
+						),							
 			'youtube'=>array(
 						'image_url'		=>	$this->plugin_url.'images/featured_plugins/youtube.png',
 						'site_url'		=>	'http://wpdevart.com/wordpress-youtube-embed-plugin',

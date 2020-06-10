@@ -132,6 +132,7 @@ function ig_es_update_330_import_options() {
 			update_option( $new_option_name, $option_value );
 			delete_option( $old_option_name );
 		}
+		
 	}
 
 	// Do not pull data for new users as there is no pluginconfig table created on activation
@@ -418,7 +419,10 @@ function ig_es_update_400_delete_tables() {
 		$wpdb->prefix . 'ig_mailing_queue',
 		$wpdb->prefix . 'ig_sending_queue',
 		$wpdb->prefix . 'ig_queue',
-		$wpdb->prefix . 'ig_actions'
+		$wpdb->prefix . 'ig_actions',
+		$wpdb->prefix . 'ig_links',
+		$wpdb->prefix . 'ig_workflows',
+		$wpdb->prefix . 'ig_workflows_queue'
 	);
 
 	foreach ( $tables_to_delete as $table ) {
@@ -1123,3 +1127,69 @@ function ig_es_update_434_db_version() {
 	ES_Install::update_db_version( '4.3.4' );
 }
 /* --------------------- ES 4.3.4(End)--------------------------- */
+
+
+/* --------------------- ES 4.4.1(Start)--------------------------- */
+/**
+ * Create Workflows Tables.
+ *
+ * @since 4.4.1
+ */
+function ig_es_update_441_create_tables() {
+	global $wpdb;
+
+	$wpdb->hide_errors();
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	dbDelta( ES_Install::get_ig_es_441_schema() );
+}
+
+/**
+ * Migrate audience sync setting to related workflows/admin settings.
+ * 
+ * @since 4.4.1
+ */
+function ig_es_update_441_migrate_audience_sync_settings() {
+	ES()->workflows_db->migrate_audience_sync_settings_to_workflows();
+	ES()->workflows_db->migrate_audience_sync_settings_to_admin_settings();
+}
+
+/**
+ * Update DB version
+ *
+ * @since 4.4.1
+ */
+function ig_es_update_441_db_version() {
+	ES_Install::update_db_version( '4.4.1' );
+}
+/* --------------------- ES 4.4.1(End)--------------------------- */
+
+
+/* --------------------- ES 4.4.2(Start)--------------------------- */
+
+/**
+ * Adding workflows user role permissions.
+ *
+ * @since 4.4.2
+ */
+function ig_es_update_442_set_workflows_default_permission() {
+	$user_role_permissions = get_option( 'ig_es_user_roles', false );
+	if ( false === $user_role_permissions ) {
+		update_option( 'ig_es_user_roles', ES_Install::get_default_permissions() );
+	} else if( ! empty( $user_role_permissions ) && is_array( $user_role_permissions ) ) {
+		$user_role_permissions['workflows'] = array(
+			'administrator' => 'yes'
+		);
+		update_option( 'ig_es_user_roles', $user_role_permissions );
+	}
+}
+
+/**
+* Update DB version
+ *
+ * @since 4.4.2
+ */
+function ig_es_update_442_db_version() {
+	ES_Install::update_db_version( '4.4.2' );
+}
+
+/* --------------------- ES 4.4.2(End)--------------------------- */

@@ -30,7 +30,7 @@ class wpdevart_comment_setting{
 			"title_text_font_famely"			=> 'Times New Roman,Times,Serif,Georgia',
 			"title_text_position"				=> 'left',
 			"width"								=>  '100%',
-			"count_of_comments"					=>  '7',
+			"count_of_comments"					=>  '5',
 			"locale"							=>  'en_US',	
 				
 		);

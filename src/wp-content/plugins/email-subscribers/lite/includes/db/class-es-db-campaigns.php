@@ -663,5 +663,41 @@ class ES_DB_Campaigns extends ES_DB {
 
 	}
 
+	/**
+	 * Method to update campaign status
+	 *
+	 * @param  array   $campaign_ids  Campaign IDs.
+	 * @param  integer $status      New status.
+	 * @return bool $updated        Update status
+	 *
+	 * @since 4.4.4
+	 */
+	public function update_status( $campaign_ids = array(), $status = 0 ) {
+		global $wpdb;
 
+		$updated = false;
+		if ( empty( $campaign_ids ) ) {
+			return $updated;
+		}
+
+		$id_str = '';
+		if ( is_array( $campaign_ids ) && count( $campaign_ids ) > 0 ) {
+			$id_str = implode( ',', $campaign_ids );
+		} elseif ( is_numeric( $campaign_ids ) ) {
+			$id_str = $campaign_ids;
+		}
+
+		if ( ! empty( $id_str ) ) {
+			$sql = 'UPDATE ' . IG_CAMPAIGNS_TABLE . ' SET status = %d';
+
+			$sql .= " WHERE id IN ($id_str)";
+
+			$sql = $wpdb->prepare( $sql, $status ); // phpcs:ignore
+
+			$updated = $wpdb->query( $sql ); // phpcs:ignore
+		}
+
+		return $updated;
+
+	}
 }

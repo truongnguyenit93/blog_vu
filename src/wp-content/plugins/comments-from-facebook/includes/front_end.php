@@ -13,7 +13,7 @@ class wpdevart_comment_front_end{
 	
 	public static $id_for_content=0;
 
-	/*###################### Constract params function ##################*/		
+	/*###################### Construct parameters function ##################*/		
 	
 	function __construct($params){
 		

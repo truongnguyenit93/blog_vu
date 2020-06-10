@@ -39,7 +39,7 @@ class ES_Admin_Notices {
 	 * Store notices to DB
 	 */
 	public static function store_notices() {
-		update_option( 'ig_admin_notices', self::get_notices() );
+		update_option( 'ig_es_admin_notices', self::get_notices() );
 	}
 
 	/**
@@ -119,12 +119,15 @@ class ES_Admin_Notices {
 		}
 
 		foreach ( $notices as $notice ) {
+
 			if ( ! empty( self::$core_notices[ $notice ] ) ) {
+
 				add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
 			} else {
 				add_action( 'admin_notices', array( __CLASS__, 'output_custom_notices' ) );
 			}
 		}
+
 	}
 
 	/**
@@ -187,6 +190,7 @@ class ES_Admin_Notices {
 	 * If we need to update, include a message with the update button.
 	 */
 	public static function es_dismiss_admin_notice() {
+
 		$es_dismiss_admin_notice = ig_es_get_request_data( 'es_dismiss_admin_notice' );
 		$option_name             = ig_es_get_request_data( 'option_name' );
 		if ( $es_dismiss_admin_notice == '1' && ! empty( $option_name ) ) {
@@ -194,12 +198,20 @@ class ES_Admin_Notices {
 			if ( in_array( $option_name, array( 'redirect_upsale_notice', 'dismiss_upsale_notice', 'dismiss_star_notice', 'star_notice_done' ) ) ) {
 				update_option( 'ig_es_' . $option_name . '_date', ig_get_current_date_time(), false );
 			}
+
+			// Covid-19 Offer
+			if ( $option_name === 'offer_covid_19' ) {
+				$url = "https://www.icegram.com/email-subscribers-pricing/?utm_source=in_app&utm_medium=es_banner&utm_campaign=" . $option_name;
+				header( "Location: {$url}" );
+				exit();
+			}
+
 			if ( $option_name === 'star_notice_done' ) {
 				header( "Location: https://wordpress.org/support/plugin/email-subscribers/reviews/" );
 				exit();
 			}
 			if ( $option_name === 'redirect_upsale_notice' ) {
-				header( "Location: https://www.icegram.com/email-subscribers-starter-plan-pricing/?utm_source=es&utm_medium=es_upsale_banner&utm_campaign=es_upsale" );
+				header( "Location: https://www.icegram.com/email-subscribers-starter-plan-pricing/?utm_source=es&utm_medium=es_upsale_banner&utm_campaign=es_upsell" );
 				exit();
 			}
 			if ( $option_name === 'offer_bfcm_done_2019' || $option_name === 'offer_last_day_bfcm_done_2019' ) {

@@ -71,19 +71,19 @@ class Export_Subscribers {
 
 		?>
 
-        <tr>
-            <th scope="col"><?php _e( 'No.', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Contacts', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Total Contacts', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Export', 'email-subscribers' ); ?></th>
-        </tr>
+		<tr class="bg-gray-100 text-xs text-left leading-4 font-medium text-gray-500 uppercase tracking-wider border-b border-t border-gray-200 ">
+			<th class="w-1/12 pl-8 py-4" scope="col"><?php _e( 'No.', 'email-subscribers' ); ?></th>
+			<th class="w-2/12 pl-4 py-4" scope="col"><?php _e( 'Contacts', 'email-subscribers' ); ?></th>
+			<th class="w-2/12 pl-8 py-4" scope="col"><?php _e( 'Total Contacts', 'email-subscribers' ); ?></th>
+			<th class="w-2/12 pl-16 py-4" scope="col"><?php _e( 'Export', 'email-subscribers' ); ?></th>
+		</tr>
 
 		<?php
 	}
 
 	public function prepare_body() {
 
-		$list_dropdown_html = "<select name='list_id' id='ig_es_export_list_dropdown'>";
+		$list_dropdown_html = "<select class='form-select sm:w-32 lg:w-40' name='list_id' id='ig_es_export_list_dropdown'>";
 		$list_dropdown_html .= ES_Common::prepare_list_dropdown_options();
 		$list_dropdown_html .= "</select>";
 
@@ -99,58 +99,72 @@ class Export_Subscribers {
 
 		$i = 1;
 		foreach ( $export_lists as $key => $export_list ) {
-			$class = '';
+			/*$class = '';
 			if ( $i % 2 === 0 ) {
 				$class = 'alternate';
-			}
+			}*/
 
 			$url = "admin.php?page=download_report&report=users&status={$key}";
 
 			?>
 
-            <tr class="<?php echo $class; ?>" id="ig_es_export_<?php echo $key; ?>">
-                <td><?php echo $i; ?></td>
-                <td><?php _e( $export_list, 'email-subscribers' ); ?></td>
-                <td class="ig_es_total_contacts"><?php echo $this->count_subscribers( $key ); ?></td>
-                <td><a href="<?php echo $url; ?>" id="ig_es_export_link_<?php echo $key; ?>"><?php _e( 'Download', 'email-subscribers' ); ?></a></td>
-            </tr>
+			<tr class="border-b text-sm font-normal text-gray-700 border-gray-200" id="ig_es_export_<?php echo $key; ?>">
+				<td class="py-2 pl-10 w-1/12"><?php echo $i; ?></td>
+				<td class="py-2 pl-4 w-2/12"><?php _e( $export_list, 'email-subscribers' ); ?></td>
+				<td class="py-2 pl-8  w-2/12 font-medium ig_es_total_contacts"><?php echo $this->count_subscribers( $key ); ?></td>
+				<td class="py-2 pl-8 w-2/12">
+					<div class="inline-flex  pl-10"><a href="<?php echo $url; ?>" id="ig_es_export_link_<?php echo $key; ?>">
+                		<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-indigo-600 hover:text-indigo-500 active:text-indigo-600"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                		</svg>
+                	</a>
+                </div>
+            </td>
+        </tr>
 
-			<?php
-			$i ++;
-		}
+        <?php
+        $i ++;
+    }
 
-	}
+}
 
-	public function export_subscribers_page() {
+public function export_subscribers_page() {
 
-		$audience_tab_main_navigation = array();
-		$active_tab                   = 'export';
-		$audience_tab_main_navigation = apply_filters( 'ig_es_audience_tab_main_navigation', $active_tab, $audience_tab_main_navigation );
+	$audience_tab_main_navigation = array();
+	$active_tab                   = 'export';
+	$audience_tab_main_navigation = apply_filters( 'ig_es_audience_tab_main_navigation', $active_tab, $audience_tab_main_navigation );
 
-		?>
-        <div class="wrap">
-            <h2 style="margin-bottom:1em;">
-				<?php _e( 'Audience > Export Contacts', 'email-subscribers' );
-				ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
-				?>
-            </h2>
-            <div class="tool-box">
-                <form name="frm_es_subscriberexport" method="post">
-                    <table width="100%" class="widefat" id="straymanage">
-                        <thead>
+	?>
+	
+	<div class="wrap ml-4">
+		<header class="wp-heading-inline">
+			<div class="mt-2">
+				<h2 class="text-2xl font-medium text-gray-900 sm:leading-9 sm:truncate">
+					<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate"> <a href="admin.php?page=es_subscribers"><?php _e( 'Audience', 'email-subscribers' ); ?> </a> </span> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 mt-1 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg> <?php _e('Export Contacts', 'email-subscribers'); ?> 
+					<?php
+					ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
+					?>
+				</div>
+			</h2>
+
+		</header>
+		<div><hr class="wp-header-end"></div>
+		<div class="mt-6 shadow-lg rounded-md  overflow-hidden">
+			<form name="frm_es_subscriberexport" method="post">
+				<table class="min-w-full" id="straymanage">
+					<thead>
 						<?php $this->prepare_header_footer_row(); ?>
-                        </thead>
-                        <tbody>
+					</thead>
+					<tbody class="bg-white">
 						<?php $this->prepare_body(); ?>
-                        </tbody>
-                        <tfoot>
+					</tbody>
+					<tfoot>
 						<?php $this->prepare_header_footer_row(); ?>
-                        </tfoot>
-                    </table>
-                </form>
-            </div>
-        </div>
-	<?php }
+					</tfoot>
+				</table>
+			</form>
+		</div>
+	</div>
+<?php }
 
 
 	/**
@@ -164,29 +178,29 @@ class Export_Subscribers {
 
 		switch ( $status ) {
 			case 'all':
-				return ES()->lists_contacts_db->get_all_contacts_count( 0, false );
-				break;
+			return ES()->lists_contacts_db->get_all_contacts_count( 0, false );
+			break;
 
 			case 'subscribed':
-				return ES()->lists_contacts_db->get_subscribed_contacts_count( 0, false );
-				break;
+			return ES()->lists_contacts_db->get_subscribed_contacts_count( 0, false );
+			break;
 
 			case 'unsubscribed':
-				return ES()->lists_contacts_db->get_unsubscribed_contacts_count( 0, false );
-				break;
+			return ES()->lists_contacts_db->get_unsubscribed_contacts_count( 0, false );
+			break;
 
 			case 'confirmed':
-				return ES()->lists_contacts_db->get_confirmed_contacts_count( 0, false );
-				break;
+			return ES()->lists_contacts_db->get_confirmed_contacts_count( 0, false );
+			break;
 
 			case 'unconfirmed':
-				return ES()->lists_contacts_db->get_unconfirmed_contacts_count( 0, false );
-				break;
+			return ES()->lists_contacts_db->get_unconfirmed_contacts_count( 0, false );
+			break;
 
 			case 'select_list':
 			default:
-				return '-';
-				break;
+			return '-';
+			break;
 		}
 
 	}
@@ -217,15 +231,15 @@ class Export_Subscribers {
 	public function download_report() {
 		?>
 
-        <div class="wrap">
-        <div id="icon-tools" class="icon32"></div>
-        <h2>Download Report</h2>
-        <p>
-            <a href="?page=download_report&report=users"><?php _e( 'Export the Subscribers', 'email-subscribers' ); ?></a>
-        </p>
+		<div class="wrap">
+			<div id="icon-tools" class="icon32"></div>
+			<h2>Download Report</h2>
+			<p>
+				<a href="?page=download_report&report=users"><?php _e( 'Export the Subscribers', 'email-subscribers' ); ?></a>
+			</p>
 
-		<?php
-	}
+			<?php
+		}
 
 	/**
 	 * Generate CSV
@@ -300,14 +314,14 @@ class Export_Subscribers {
 			);
 
 			$lists_id_name_map = ES()->lists_db->get_list_id_name_map();
-			$csv_output        .= '"' . implode( '", "', $headers ) . '"';
+			$csv_output        .= implode( ',', $headers );
 			$csv_output        .= "\n";
 
 			foreach ( $subscribers as $key => $subscriber ) {
 
-				$data['first_name'] = trim( str_replace( '"', ' ', $subscriber['first_name'] ) );
-				$data['last_name']  = trim( str_replace( '"', ' ', $subscriber['last_name'] ) );
-				$data['email']      = trim( str_replace( '"', ' ', $subscriber['email'] ) );
+				$data['first_name'] = trim( str_replace( '"', '""', $subscriber['first_name'] ) );
+				$data['last_name']  = trim( str_replace( '"', '""', $subscriber['last_name'] ) );
+				$data['email']      = trim( str_replace( '"', '""', $subscriber['email'] ) );
 
 				$contact_id = $subscriber['id'];
 				if ( ! empty( $contact_list_map[ $contact_id ] ) ) {
@@ -316,7 +330,7 @@ class Export_Subscribers {
 						$data['status']     = ucfirst( $list_details['status'] );
 						$data['optin_type'] = ( $list_details['optin_type'] == 1 ) ? 'Single Opt-In' : 'Double Opt-In';
 						$data['created_at'] = $subscriber['created_at'];
-						$csv_output         .= '"' . implode( '", "', $data ) . '"';
+						$csv_output         .= '"' . implode( '","', $data ) . '"';
 						$csv_output         .= "\n";
 					}
 				}

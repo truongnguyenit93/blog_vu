@@ -13,7 +13,9 @@ class ES_Form_Widget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
+
+		$title = apply_filters( 'widget_title', $title );
 
 		echo $args['before_widget'];
 
@@ -21,7 +23,7 @@ class ES_Form_Widget extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
-		$form_id = isset( $instance['form_id'] ) ? esc_attr( $instance['form_id'] ) : '';
+		$form_id = isset( $instance['form_id'] ) ? esc_attr( $instance['form_id'] ) : 0;
 
 		$form_data = array();
 		if ( ! empty( $form_id ) ) {
@@ -31,9 +33,9 @@ class ES_Form_Widget extends WP_Widget {
 			$form_data = ES_Forms_Table::get_form_data_from_body( $form );
 		}
 
+		$data = array();
 
-		$data                       = array();
-		$data['form_id']            = 0;
+		$data['form_id']            = $form_id;
 		$data['list']               = '';
 		$data['name_visible']       = ( ! empty( $form_data['name_visible'] ) && 'yes' === $form_data['name_visible'] ) ? 'yes' : '';
 		$data['name_required']      = ( ! empty( $form_data['name_required'] ) && 'yes' === $form_data['name_required'] ) ? 'yes' : '';
@@ -46,6 +48,9 @@ class ES_Form_Widget extends WP_Widget {
 		$data['email_place_holder'] = ( ! empty( $form_data['email_place_holder'] ) ) ? $form_data['email_place_holder'] : '';
 		$data['button_label']       = ( ! empty( $form_data['button_label'] ) ) ? $form_data['button_label'] : '';
 		$data['form_version']       = ( ! empty( $form_data['form_version'] ) ) ? $form_data['form_version'] : '';
+		$data['gdpr_consent']       = ( ! empty( $form_data['gdpr_consent'] ) ) ? $form_data['gdpr_consent'] : 'no';
+		$data['gdpr_consent_text']  = ( ! empty( $form_data['gdpr_consent_text'] ) ) ? $form_data['gdpr_consent_text'] : '';
+		$data['captcha']            = ( ! empty( $form_data['captcha'] ) ) ? $form_data['captcha'] : 'no';
 
 		ES_Shortcode::render_form( $data );
 

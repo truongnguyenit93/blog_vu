@@ -65,31 +65,35 @@ class ES_Lists_Table extends WP_List_Table {
 		$action = ig_es_get_request_data( 'action' );
 
 		?>
-        <div class="wrap">
-		<?php if ( 'new' === $action ) {
-			$this->es_new_lists_callback();
-		} elseif ( 'edit' === $action ) {
-			$list = ig_es_get_request_data( 'list' );
-			echo $this->edit_list( absint( $list ) );
-		} else { ?>
-            <h1 class="wp-heading-inline"><?php _e( 'Audience > Lists', 'email-subscribers' ); ?> <a href="admin.php?page=es_lists&action=new" class="page-title-action">Add New</a></h1>
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder column-1">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post">
-								<?php
-								$this->prepare_items();
-								$this->display(); ?>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-            </div>
-		<?php }
-	}
+		<div class="wrap">
+			<?php if ( 'new' === $action ) {
+				$this->es_new_lists_callback();
+			} elseif ( 'edit' === $action ) {
+				$list = ig_es_get_request_data( 'list' );
+				echo $this->edit_list( absint( $list ) );
+			} else { ?>
+
+				<h1 class=" wp-heading-inline "><span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate"><a href="admin.php?page=es_subscribers"><?php _e( 'Audience', 'email-subscribers' ); ?> </a>
+					</span> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 mt-1 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"> <?php _e('Lists', 'email-subscribers'); ?></span> <a href="admin.php?page=es_lists&action=new" class="pt-2 ig-es-title-button px-2 py-2 mx-2"><?php _e('Add New','email-subscribers'); ?></a></h1>
+					<br>
+
+					<div id="poststuff" class="es-items-lists es-lists-table">
+						<div id="post-body" class="metabox-holder column-1">
+							<div id="post-body-content">
+								<div class="meta-box-sortables ui-sortable">
+									<form method="post">
+										<?php
+										$this->prepare_items();
+										$this->display(); ?>
+									</form>
+								</div>
+							</div>
+						</div>
+						<br class="clear">
+					</div>
+				</div>
+			<?php }
+		}
 
 	/**
 	 * Validate data
@@ -241,41 +245,74 @@ class ES_Lists_Table extends WP_List_Table {
 
 		?>
 
-        <div class="wrap">
-            <h1 class="wp-heading-inline">
+		<div class="wrap max-w-full mt-8 font-sans">
+			<header class="ml-12 mr-8  wp-heading-inline">
+				<div class="md:flex md:items-center md:justify-between justify-center">
+					<div class="flex-1 min-w-0">
+						<h2 class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate">
+							<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate">
+								<a href="admin.php?page=es_subscribers"><?php _e('Audience ','email-subscribers'); ?></a></span> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-3 h-3 mt-1 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg>
+								<a class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate" href="admin.php?page=es_lists&action=manage-lists"><?php _e(' Lists ','email-subscribers'); ?></a> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-3 h-3 mt-1 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg>
+
+								<?php
+								if ( $is_new ) {
+									_e( 'Add New', 'email-subscribers' );
+								} else {
+									_e( 'Edit List', 'email-subscribers' );
+								}
+
+								?>
+							</h2>
+						</div>
+					</div>
+				</header>
+				<div class="ml-12 mr-8"><hr class="wp-header-end"></div>
+				<div class="rounded max-w-full ">
+					<div id="poststuff">
+						<div id="post-body" class="metabox-holder column-1">
+							<div id="post-body-content">
+								<div class="meta-box-sortables ui-sortable bg-white shadow-md ml-12 mr-8 mt-4 rounded-lg">
+									<form class="ml-5 mr-4 text-left pt-8 flex-row mt-2 item-center " method="post" action="admin.php?page=es_lists&action=<?php echo $action; ?>&list=<?php echo $id; ?>&_wpnonce=<?php echo $nonce; ?>">
+
+										<div class="flex flex-row ">
+											<div class="flex w-1/5">
+												<div class="ml-4 pt-6 px-3	">
+													<label for="name" class="block text-sm leading-5 font-medium text-gray-600"><?php _e( 'List Name', 'email-subscribers' ); ?></label>
+												</div>
+											</div>
+											<div class="flex">
+												<div class="ml-16 mb-4 h-10 mr-4 mt-4">
+													<div class="h-10 relative">
+
+														<input class="form-input block border-gray-400 w-full pl-3 pr-12 focus:bg-gray-100 sm:text-sm sm:leading-5" placeholder="Enter list name" id="name" name="list_name" value="<?php echo esc_attr( $list_name ); ?>"/>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<input type="hidden" name="submitted" value="submitted"/>
+										<input type="submit" name="submit" id="submit" class="cursor-pointer align-middle ig-es-primary-button px-4 py-2 my-4 ml-6 mr-2" value="<?php if ( $is_new ) {  
+											_e( 'Save List', 'email-subscribers' ); 
+										}
+										else{
+											_e( 'Save Changes', 'email-subscribers' ); 
+										}
+
+										?>"/><!-- <?php submit_button(); ?> -->
+										<a href="admin.php?page=es_lists&action=manage-lists" class="cursor-pointer align-middle rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a>
+									</form>
+								</div>
+							</div>
+						</div>
+
+						<br class="clear">
+					</div>
+
+				</div>
+
 				<?php
-				if ( $is_new ) {
-					_e( 'Add New', 'email-subscribers' );
-				} else {
-					_e( 'Edit List', 'email-subscribers' );
-				}
 
-				?>
-                <a href="admin.php?page=es_lists&action=manage-lists" class="page-title-action es-imp-button"><?php _e( 'Manage Lists', 'email-subscribers' ); ?></a>
-            </h1>
-
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder column-1">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post" action="admin.php?page=es_lists&action=<?php echo $action; ?>&list=<?php echo $id; ?>&_wpnonce=<?php echo $nonce; ?>">
-                                <div class="row-blog">
-                                    <label><?php _e( 'Name', 'email-subscribers' ); ?>: </label>
-                                    <input type="text" id="name" name="list_name" value="<?php echo esc_attr( $list_name ); ?>"/>
-                                </div>
-                                <input type="hidden" name="submitted" value="submitted"/>
-                                <div class="row-blog"><?php submit_button(); ?></div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-        </div>
-
-		<?php
-
-	}
+			}
 
 	/**
 	 * Save list
@@ -295,18 +332,6 @@ class ES_Lists_Table extends WP_List_Table {
 		} else {
 			$return = $this->db->add_list( $name );
 		}
-
-		/*
-		$list_data['name']       = sanitize_text_field( $data['list_name'] );
-		$list_data['slug']       = sanitize_title( $list_data['name'] );
-		$list_data['created_at'] = ig_get_current_date_time();
-
-		if ( ! empty( $id ) ) {
-			$return = $wpdb->update( IG_LISTS_TABLE, $list_data, array( 'id' => $id ) );
-		} else {
-			$return = $wpdb->insert( IG_LISTS_TABLE, $list_data );
-		}
-		*/
 
 		return $return;
 	}
@@ -399,50 +424,64 @@ class ES_Lists_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 
 		switch ( $column_name ) {
+
 			case 'subscribed':
-				$count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'subscribed' );
-				if ( $count > 0 ) {
-					$url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=subscribed&filter_by_list_id=' . $item['id'] );
-					$count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
-				}
 
-				return $count;
-				break;
+                $count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'subscribed' );
+                if ( $count > 0 ) {
+                    $url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=subscribed&filter_by_list_id=' . $item['id'] );
+                    $count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
+                }
+
+                return $count;
+			    break;
+
 			case 'unsubscribed':
-				$count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'unsubscribed' );
-				if ( $count > 0 ) {
-					$url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=unsubscribed&filter_by_list_id=' . $item['id'] );
-					$count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
-				}
 
-				return $count;
-				break;
+                $count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'unsubscribed' );
+                if ( $count > 0 ) {
+                    $url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=unsubscribed&filter_by_list_id=' . $item['id'] );
+                    $count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
+                }
+
+                return $count;
+			    break;
+
 			case 'unconfirmed':
-				$count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'unconfirmed' );
-				if ( $count > 0 ) {
-					$url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=unconfirmed&filter_by_list_id=' . $item['id'] );
-					$count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
-				}
 
-				return $count;
-				break;
+			$count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'unconfirmed' );
+                if ( $count > 0 ) {
+                    $url   = admin_url( 'admin.php?page=es_subscribers&filter_by_status=unconfirmed&filter_by_list_id=' . $item['id'] );
+                    $count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
+                }
+
+                return $count;
+                break;
+
 			case 'all_contacts':
-				$count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'all' );
-				if ( $count > 0 ) {
-					$url   = admin_url( 'admin.php?page=es_subscribers&filter_by_list_id=' . $item['id'] );
-					$count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
-				}
 
-				return $count;
-				break;
+                $count = ES()->lists_contacts_db->get_total_count_by_list( $item['id'], 'all' );
+                if ( $count > 0 ) {
+                    $url   = admin_url( 'admin.php?page=es_subscribers&filter_by_list_id=' . $item['id'] );
+                    $count = sprintf( __( '<a href="%s" target="_blank">%d</a>', 'email-subscribers' ), $url, $count );
+                }
+
+                return $count;
+                break;
+
 			case 'created_at':
-				return ig_es_format_date_time( $item[ $column_name ] );
-				break;
+
+                return ig_es_format_date_time( $item[ $column_name ] );
+                break;
 
 			case 'export':
-				return "<a href='admin.php?page=download_report&report=users&status=select_list&list_id={$item['id']}'>" . __( 'Download', 'email-subscribers' ) . '</a>';
+
+			    return "<a href='admin.php?page=download_report&report=users&status=select_list&list_id={$item['id']}'><svg fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' class='w-8 h-8 text-indigo-600 hover:text-indigo-500 active:text-indigo-600'><path d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'></path></svg></a>";
+			    break;
+
 			default:
-				return '';
+
+			    return '';
 		}
 	}
 
@@ -475,7 +514,7 @@ class ES_Lists_Table extends WP_List_Table {
 		if ( $item['id'] != 1 ) {
 			$page    = ig_es_get_request_data( 'page' );
 			$actions = array(
-				'edit'   => sprintf( __( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s">Edit</a>', 'email-subscribers' ), esc_attr( $page ), 'edit', absint( $item['id'] ), $list_nonce ),
+				'edit'   => sprintf( __( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s" class="text-indigo-600">Edit</a>', 'email-subscribers' ), esc_attr( $page ), 'edit', absint( $item['id'] ), $list_nonce ),
 				'delete' => sprintf( __( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s" onclick="return checkDelete()">Delete</a>', 'email-subscribers' ), esc_attr( $page ), 'delete', absint( $item['id'] ), $list_nonce )
 			);
 		}
@@ -543,11 +582,11 @@ class ES_Lists_Table extends WP_List_Table {
 	 * @since 4.3.4 Added esc_attr()
 	 */
 	public function search_box( $text = '', $input_id = '' ) { ?>
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
-            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( __( 'Search Lists', 'email-subscribers' ), 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
-        </p>
+		</p>
 	<?php }
 
 	/**

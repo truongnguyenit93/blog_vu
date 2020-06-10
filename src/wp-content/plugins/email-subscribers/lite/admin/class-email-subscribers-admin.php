@@ -1,5 +1,6 @@
 <?php
 
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,6 +61,7 @@ class Email_Subscribers_Admin {
 		$this->version           = $version;
 
 		// Reorder ES Submenu
+
 		add_filter( 'custom_menu_order', array( $this, 'submenu_order' ) );
 
 		add_action( 'admin_menu', array( $this, 'email_subscribers_admin_menu' ) );
@@ -68,6 +70,8 @@ class Email_Subscribers_Admin {
 		add_action( 'wp_ajax_send_test_email', array( $this, 'send_test_email' ) );
 		add_action( 'admin_init', array( $this, 'es_save_onboarding_skip' ) );
 
+		// Ajax handler for campaign status toggle.
+		add_action( 'wp_ajax_ig_es_toggle_campaign_status', array( $this, 'toggle_campaign_status' ) );
 	}
 
 	/**
@@ -95,12 +99,10 @@ class Email_Subscribers_Admin {
 
 		wp_enqueue_style( $this->email_subscribers, plugin_dir_url( __FILE__ ) . 'css/email-subscribers-admin.css', array(), $this->version, 'all' );
 
-		$get_page = ig_es_get_request_data( 'page' );
+		wp_register_style( $this->email_subscribers . '-timepicker', plugin_dir_url( __FILE__ ) . 'css/jquery.timepicker.css' );
+		wp_enqueue_style( $this->email_subscribers . '-timepicker' );
 
-		if ( ! empty( $get_page ) && 'es_settings' === $get_page ) {
-			// wp_enqueue_style( 'thickbox' );
-			wp_enqueue_style( 'email-jquery-ui', plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css', array(), $this->version, 'all' );
-		}
+		wp_enqueue_style( 'ig-es-style', plugin_dir_url( __FILE__ ) . 'dist/main.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -115,7 +117,49 @@ class Email_Subscribers_Admin {
 		}
 
 		wp_enqueue_script( $this->email_subscribers, plugin_dir_url( __FILE__ ) . 'js/email-subscribers-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs' ), $this->version, false );
+
+
+		$ig_es_js_data = array(
+			'security'  => wp_create_nonce( 'ig-es-admin-ajax-nonce' ),
+			'i18n_data' => array(
+				'ajax_error_message'              => __( 'An error has occured. Please try again later.', 'email-subscribers' ),
+				'broadcast_draft_success_message' => __( 'Broadcast saved as draft successfully.', 'email-subscribers' ),
+				'broadcast_draft_error_message'   => __( 'An error has occured while saving the broadcast. Please try again later.', 'email-subscribers' ),
+				'broadcast_subject_empty_message' => __( 'Please add a broadcast subject before saving.', 'email-subscribers' ),
+				'empty_template_message'          => __( 'Please add email body.', 'email-subscribers' ),
+			),
+		);
+
+		wp_localize_script( $this->email_subscribers, 'ig_es_js_data', $ig_es_js_data );
+
 		wp_enqueue_script( 'custom', plugin_dir_url( __FILE__ ) . 'js/es-onboarding.js', array( 'jquery' ), $this->version, false );
+
+		$page_prefix = 'email-subscribers_page_';
+
+		if ( ES()->is_es_admin_screen( $page_prefix . 'es_workflows' ) ) {
+
+			wp_enqueue_script( $this->email_subscribers . '-workflows', plugin_dir_url( __FILE__ ) . 'js/ig-es-workflows.js', array( 'jquery', 'jquery-ui-datepicker' ), $this->version, false );
+
+			$workflows_data = array(
+				'security'               => wp_create_nonce( 'ig-es-workflow-nonce' ),
+				'no_trigger_message'     => __( 'Please select a trigger before saving the workflow.', 'email-subscribers' ),
+				'no_actions_message'     => __( 'Please add some actions before saving the workflow.', 'email-subscribers' ),
+				'trigger_change_message' => __( 'Changing the trigger will remove existing actions. Do you want to proceed anyway?.', 'email-subscribers' ),
+			);
+
+			wp_localize_script( $this->email_subscribers . '-workflows', 'ig_es_workflows_data', $workflows_data );
+
+		}
+
+		//timepicker
+		wp_register_script( $this->email_subscribers . '-timepicker', plugin_dir_url( __FILE__ ) . 'js/jquery.timepicker.js', array( 'jquery' ), ES_PLUGIN_VERSION, true );
+		wp_enqueue_script( $this->email_subscribers . '-timepicker' );
+
+		$get_page = ig_es_get_request_data( 'page' );
+		if ( ! empty( $get_page ) && 'es_dashboard' === $get_page ) {
+			wp_enqueue_script( 'frappe-js', plugin_dir_url( __FILE__ ) . 'js/frappe-charts.min.life.js', array( 'jquery' ), $this->version, false );
+		}
+
 	}
 
 	public function remove_submenu() {
@@ -144,6 +188,18 @@ class Email_Subscribers_Admin {
 			add_submenu_page( 'es_dashboard', __( 'Dashboard', 'email-subscribers' ), __( 'Dashboard', 'email-subscribers' ), 'edit_posts', 'es_dashboard', array( $this, 'es_dashboard_callback' ) );
 		}
 
+		if ( in_array( 'workflows', $accessible_sub_menus ) ) {
+
+
+			// Add Workflows Submenu
+			$hook = add_submenu_page( 'es_dashboard', __( 'Workflows', 'email-subscribers' ), __( 'Workflows', 'email-subscribers' ), 'edit_posts', 'es_workflows', array( $this, 'render_workflows' ) );
+
+			add_action( "load-$hook", array( 'ES_Workflows_Table', 'screen_options' ) );
+			add_action( "load-$hook", array( 'ES_Workflow_Admin_Edit', 'register_meta_boxes' ) );
+			add_action( "admin_footer-$hook", array( 'ES_Workflow_Admin_Edit', 'print_script_in_footer' ) );
+			add_action( 'admin_init', array( 'ES_Workflow_Admin_Edit', 'maybe_save' ) );
+		}
+
 		if ( in_array( 'campaigns', $accessible_sub_menus ) ) {
 			// Add Campaigns Submenu
 			$hook = add_submenu_page( 'es_dashboard', __( 'Campaigns', 'email-subscribers' ), __( 'Campaigns', 'email-subscribers' ), 'edit_posts', 'es_campaigns', array( $this, 'render_campaigns' ) );
@@ -152,7 +208,9 @@ class Email_Subscribers_Admin {
 			add_submenu_page( 'es_dashboard', __( 'Post Notifications', 'email-subscribers' ), '<span id="ig-es-post-notifications">' . __( 'Post Notifications', 'email-subscribers' ) . '</span>', 'edit_posts', 'es_notifications', array( $this, 'load_post_notifications' ) );
 			add_submenu_page( 'es_dashboard', __( 'Broadcast', 'email-subscribers' ), '<span id="ig-es-broadcast">' . __( 'Broadcast', 'email-subscribers' ) . '</span>', 'edit_posts', 'es_newsletters', array( $this, 'load_newsletters' ) );
 			add_submenu_page( null, __( 'Template Preview', 'email-subscribers' ), __( 'Template Preview', 'email-subscribers' ), 'edit_posts', 'es_template_preview', array( $this, 'load_preview' ) );
+
 		}
+
 
 		if ( in_array( 'forms', $accessible_sub_menus ) ) {
 			// Add Forms Submenu
@@ -177,6 +235,11 @@ class Email_Subscribers_Admin {
 		if ( in_array( 'settings', $accessible_sub_menus ) ) {
 			add_submenu_page( 'es_dashboard', __( 'Settings', 'email-subscribers' ), __( 'Settings', 'email-subscribers' ), 'manage_options', 'es_settings', array( $this, 'load_settings' ) );
 		}
+
+		if ( in_array( 'ig_redirect', $accessible_sub_menus ) ) {
+			add_submenu_page( null, __( 'Go To Icegram', 'email-subscribers' ), '<span id="ig-es-onsite-campaign">' . __( 'Go To Icegram', 'email-subscribers' ) . '</span>', 'edit_posts', 'go_to_icegram', array( $this, 'go_to_icegram' ) );
+		}
+
 
 		/**
 		 * Add Other Submenu Pages
@@ -245,6 +308,16 @@ class Email_Subscribers_Admin {
 			}
 		}
 		exit();
+	}
+
+	/**
+	 * Render Workflows Screen
+	 *
+	 * @since 4.2.1
+	 */
+	public function render_workflows() {
+		$workflows = new ES_Workflows_Table();
+		$workflows->render();
 	}
 
 	/**
@@ -336,6 +409,16 @@ class Email_Subscribers_Admin {
 		$preview->es_template_preview_callback();
 	}
 
+	/**
+	 * Redirect to icegram if required
+	 *
+	 * @since 4.4.1
+	 */
+	public function go_to_icegram() {
+		ES_IG_Redirect::go_to_icegram();
+	}
+
+
 	function submenu_order( $menu_order ) {
 		global $submenu;
 
@@ -349,6 +432,7 @@ class Email_Subscribers_Admin {
 				'es_lists',
 				'es_forms',
 				'es_campaigns',
+				'es_workflows',
 				'edit.php?post_type=es_template',
 				'es_notifications',
 				'es_newsletters',
@@ -359,6 +443,8 @@ class Email_Subscribers_Admin {
 				'es_settings',
 				'es_general_information',
 				'es_pricing',
+
+
 			);
 
 			$order = array_flip( $es_menu_order );
@@ -530,7 +616,8 @@ class Email_Subscribers_Admin {
 			'es_campaigns_per_page',
 			'es_contacts_per_page',
 			'es_lists_per_page',
-			'es_forms_per_page'
+			'es_forms_per_page',
+			'es_workflows_per_page'
 		);
 
 		if ( in_array( $option, $ig_es_options ) ) {
@@ -539,5 +626,148 @@ class Email_Subscribers_Admin {
 
 		return $status;
 	}
+
+	/**
+	 * Remove all admin notices
+	 * @since 4.4.0
+	 */
+	public function remove_other_admin_notices() {
+		global $wp_filter;
+
+		if ( ! ES()->is_es_admin_screen() ) {
+			return;
+		}
+
+		$get_page = ig_es_get_request_data( 'page' );
+
+		if ( ! empty( $get_page ) && 'es_dashboard' == $get_page ) {
+
+		    // Allow only Icegram Connection popup on Dashboard
+			$es_display_notices = array(
+				'connect_icegram_notification',
+			);
+
+		} else {
+
+			$es_display_notices = array(
+				'connect_icegram_notification',
+				'show_review_notice',
+				'custom_admin_notice',
+				'output_custom_notices',
+				'ig_es_fail_php_version_notice',
+			);
+		}
+
+		// User admin notices
+		if ( ! empty( $wp_filter['user_admin_notices']->callbacks ) && is_array( $wp_filter['user_admin_notices']->callbacks ) ) {
+			foreach ( $wp_filter['user_admin_notices']->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $name => $details ) {
+
+					if ( is_object( $details['function'] ) && $details['function'] instanceof \Closure ) {
+						unset( $wp_filter['user_admin_notices']->callbacks[ $priority ][ $name ] );
+						continue;
+					}
+
+					if ( ! empty( $details['function'][0] ) && is_object( $details['function'][0] ) && count( $details['function'] ) == 2 ) {
+						$notice_callback_name = $details['function'][1];
+						if ( ! in_array( $notice_callback_name, $es_display_notices ) ) {
+							unset( $wp_filter['user_admin_notices']->callbacks[ $priority ][ $name ] );
+						}
+					}
+				}
+			}
+		}
+
+		// Admin notices
+		if ( ! empty( $wp_filter['admin_notices']->callbacks ) && is_array( $wp_filter['admin_notices']->callbacks ) ) {
+			foreach ( $wp_filter['admin_notices']->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $name => $details ) {
+
+					if ( is_object( $details['function'] ) && $details['function'] instanceof \Closure ) {
+						unset( $wp_filter['admin_notices']->callbacks[ $priority ][ $name ] );
+						continue;
+					}
+
+					if ( ! empty( $details['function'][0] ) && is_object( $details['function'][0] ) && count( $details['function'] ) == 2 ) {
+						$notice_callback_name = $details['function'][1];
+						if ( ! in_array( $notice_callback_name, $es_display_notices ) ) {
+							unset( $wp_filter['admin_notices']->callbacks[ $priority ][ $name ] );
+						}
+					}
+				}
+			}
+		}
+
+		// All admin notices
+		if ( ! empty( $wp_filter['all_admin_notices']->callbacks ) && is_array( $wp_filter['all_admin_notices']->callbacks ) ) {
+			foreach ( $wp_filter['all_admin_notices']->callbacks as $priority => $callbacks ) {
+				foreach ( $callbacks as $name => $details ) {
+
+					if ( is_object( $details['function'] ) && $details['function'] instanceof \Closure ) {
+						unset( $wp_filter['all_admin_notices']->callbacks[ $priority ][ $name ] );
+						continue;
+					}
+
+					if ( ! empty( $details['function'][0] ) && is_object( $details['function'][0] ) && count( $details['function'] ) == 2 ) {
+						$notice_callback_name = $details['function'][1];
+						if ( ! in_array( $notice_callback_name, $es_display_notices ) ) {
+							unset( $wp_filter['all_admin_notices']->callbacks[ $priority ][ $name ] );
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Method to handle campaign status change
+	 *
+	 * @return string JSON response of the request
+	 *
+	 * @since 4.4.4
+	 */
+	public function toggle_campaign_status() {
+
+		check_ajax_referer( 'ig-es-admin-ajax-nonce', 'security' );
+
+		$campaign_id         = ig_es_get_request_data( 'campaign_id' );
+		$new_campaign_status = ig_es_get_request_data( 'new_campaign_status' );
+
+		if ( ! empty( $campaign_id ) ) {
+
+			$status_updated = ES()->campaigns_db->update_status( $campaign_id, $new_campaign_status );
+
+			if ( $status_updated ) {
+				wp_send_json_success();
+			} else {
+				wp_send_json_error();
+			}
+		}
+	}
+
+	/**
+	 * Update admin footer text
+	 *
+	 * @param $footer_text
+	 *
+	 * @return string
+	 *
+	 * @since 4.4.6
+	 */
+	public function update_admin_footer_text( $footer_text ) {
+
+		// Update Footer admin only on ES pages
+		if ( ES()->is_es_admin_screen() ) {
+
+			$wordpress_url = 'https://www.wordpress.org';
+			$icegram_url   = 'https://www.icegram.com';
+
+			$footer_text = sprintf( __( '<span id="footer-thankyou">Thank you for creating with <a href="%s" target="_blank">WordPress</a> | Email Subscribers <b>%s</b>. Developed by team <a href="%s" target="_blank">Icegram</a></span>', 'email-subscribers' ), $wordpress_url, ES_PLUGIN_VERSION, $icegram_url );
+		}
+
+		return $footer_text;
+	}
+
 
 }

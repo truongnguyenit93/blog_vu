@@ -21,6 +21,7 @@ class ES_Reports_Table extends WP_List_Table {
 			'ajax'     => false, //does this table support ajax?,
 			'screen'   => 'es_reports'
 		) );
+
 	}
 
 	public function es_reports_callback() {
@@ -32,37 +33,37 @@ class ES_Reports_Table extends WP_List_Table {
 		} else {
 			?>
 
-            <div class="wrap">
-                <h1 class="wp-heading-inline"><?php _e( 'Reports', 'email-subscribers' ); ?></h1>
+			<div class="wrap">
+				<h1 class="wp-heading-inline"><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"><?php _e( 'Reports', 'email-subscribers' ); ?></span></h1>
 				<?php
 				$emails_to_be_sent = ES_DB_Sending_Queue::get_total_emails_to_be_sent();
 				if ( $emails_to_be_sent > 0 ) {
 					$cron_url = ES()->cron->url( true );
-					$content  = sprintf( __( "<a href='%s' target='_blank' class='page-title-action es-imp-button'>Send Queued Emails Now</a>", 'email-subscribers' ), $cron_url );
+					$content  = sprintf( __( "<a href='%s' class='px-4 py-2 ig-es-imp-button'>Send Queued Emails Now</a>", 'email-subscribers' ), $cron_url );
 				} else {
-					$content = sprintf( __( "<span class='page-title-action button-disabled'>Send Queued Emails Now</span>", 'email-subscribers' ) );
+					$content = sprintf( __( "<span class='ig-es-send-queue-emails button-disabled'>Send Queued Emails Now</span>", 'email-subscribers' ) );
 					$content .= sprintf( __( "<br /><span class='es-helper'>No emails found in queue</span>", 'email-subscribers' ) );
 				}
 				?>
 
-                <span class="ig-es-process-queue"><?php echo $content; ?></span>
+				<span class="ig-es-process-queue"><?php echo $content; ?></span>
 
 
-                <div id="poststuff">
-                    <div id="post-body" class="metabox-holder column-1">
-                        <div id="post-body-content">
-                            <div class="meta-box-sortables ui-sortable">
-                                <form method="post">
+				<div id="poststuff" class="es-items-lists">
+					<div id="post-body" class="metabox-holder column-1">
+						<div id="post-body-content">
+							<div class="meta-box-sortables ui-sortable">
+								<form method="post">
 									<?php
 									$this->prepare_items();
 									$this->display(); ?>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <br class="clear">
-                </div>
-            </div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<br class="clear">
+				</div>
+			</div>
 
 			<?php
 		}
@@ -85,14 +86,14 @@ class ES_Reports_Table extends WP_List_Table {
 
 		?>
 
-        <tr>
-            <th width="6%" scope="col"><?php _e( 'Sr No', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Email', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Status', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Sent Date', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Viewed Status', 'email-subscribers' ); ?></th>
-            <th scope="col"><?php _e( 'Viewed Date', 'email-subscribers' ); ?></th>
-        </tr>
+		<tr>
+			<th width="6%" scope="col"><?php _e( 'Sr No', 'email-subscribers' ); ?></th>
+			<th scope="col"><?php _e( 'Email', 'email-subscribers' ); ?></th>
+			<th scope="col"><?php _e( 'Status', 'email-subscribers' ); ?></th>
+			<th scope="col"><?php _e( 'Sent Date', 'email-subscribers' ); ?></th>
+			<th scope="col"><?php _e( 'Viewed Status', 'email-subscribers' ); ?></th>
+			<th scope="col"><?php _e( 'Viewed Date', 'email-subscribers' ); ?></th>
+		</tr>
 
 		<?php
 	}
@@ -105,26 +106,26 @@ class ES_Reports_Table extends WP_List_Table {
 		$total_email_sent   = ES_DB_Sending_Queue::get_total_email_count_by_hash( $id );
 
 		?>
-        <div class="wrap">
-            <div class="tool-box">
-                <div class="tablenav">
-                    <div class="alignleft" style="padding-bottom:10px;"><?php echo 'Viewed ' . $email_viewed_count . '/' . $total_email_sent; ?></div>
-                </div>
-                <form name="frm_es_display" method="post">
-                    <table width="100%" class="widefat" id="straymanage">
-                        <thead>
-						<?php echo $this->prepare_header_footer_row(); ?>
-                        </thead>
-                        <tbody>
-						<?php echo $this->prepare_body( $emails ); ?>
-                        </tbody>
-                        <tfoot>
-						<?php echo $this->prepare_header_footer_row(); ?>
-                        </tfoot>
-                    </table>
-                </form>
-            </div>
-        </div>
+		<div class="wrap">
+			<div class="tool-box">
+				<div class="tablenav">
+					<div class="alignleft" style="padding-bottom:10px;"><?php echo 'Viewed ' . $email_viewed_count . '/' . $total_email_sent; ?></div>
+				</div>
+				<form name="frm_es_display" method="post">
+					<table width="100%" class="widefat" id="straymanage">
+						<thead>
+							<?php echo $this->prepare_header_footer_row(); ?>
+						</thead>
+						<tbody>
+							<?php echo $this->prepare_body( $emails ); ?>
+						</tbody>
+						<tfoot>
+							<?php echo $this->prepare_header_footer_row(); ?>
+						</tfoot>
+					</table>
+				</form>
+			</div>
+		</div>
 
 		<?php
 
@@ -150,26 +151,26 @@ class ES_Reports_Table extends WP_List_Table {
 
 			?>
 
-            <tr class="<?php echo $class; ?>">
-                <td align="left"><?php echo $i; ?></td>
-                <td><?php echo $email_id; ?></td>
-                <td><span style="color:#03a025;font-weight:bold;"><?php echo $status; ?></span></td>
-                <td><?php echo ig_es_format_date_time( $sent_at ); ?></td>
-                <td><span><?php echo ( ! empty( $opened ) && $opened == 1 ) ? _e( 'Viewed', 'email-subscribers' ) : '<i title="' . __( 'Not yet viewed', 'email-subscribers' ) . '" class="dashicons dashicons-es dashicons-minus">' ?></span></td>
-                <td><?php echo ig_es_format_date_time( $opened_at ); ?></td>
-            </tr>
+			<tr class="<?php echo $class; ?>">
+				<td align="left"><?php echo $i; ?></td>
+				<td><?php echo $email_id; ?></td>
+				<td><span style="color:#03a025;font-weight:bold;"><?php echo $status; ?></span></td>
+				<td><?php echo ig_es_format_date_time( $sent_at ); ?></td>
+				<td><span><?php echo ( ! empty( $opened ) && $opened == 1 ) ? _e( 'Viewed', 'email-subscribers' ) : '<i title="' . __( 'Not yet viewed', 'email-subscribers' ) . '" class="dashicons dashicons-es dashicons-minus">' ?></span></td>
+					<td><?php echo ig_es_format_date_time( $opened_at ); ?></td>
+				</tr>
 
-			<?php
-			$i ++;
+				<?php
+				$i ++;
+			}
+
 		}
 
-	}
 
-
-	/** Text displayed when no list data is available */
-	public function no_items() {
-		_e( 'No Reports avaliable.', 'email-subscribers' );
-	}
+		/** Text displayed when no list data is available */
+		public function no_items() {
+			_e( 'No Reports avaliable.', 'email-subscribers' );
+		}
 
 	/**
 	 * Render a column when no column specific method exist.
@@ -185,41 +186,41 @@ class ES_Reports_Table extends WP_List_Table {
 		switch ( $column_name ) {
 			case 'start_at':
 			case 'finish_at':
-				return ig_es_format_date_time( $item[ $column_name ] );
+			return ig_es_format_date_time( $item[ $column_name ] );
 			case 'type':
-				if ( empty( $item['campaign_id'] ) ) {
-					$type = __( 'Post Notification', 'email-subscribers' );
-				} else {
-					$type = ES()->campaigns_db->get_campaign_type_by_id( $item['campaign_id'] );
-					$type = strtolower( $type );
-					$type = ( 'newsletter' === $type ) ? __( 'Broadcast', 'email-subscribers' ) : $type;
-				}
+			if ( empty( $item['campaign_id'] ) ) {
+				$type = __( 'Post Notification', 'email-subscribers' );
+			} else {
+				$type = ES()->campaigns_db->get_campaign_type_by_id( $item['campaign_id'] );
+				$type = strtolower( $type );
+				$type = ( 'newsletter' === $type ) ? __( 'Broadcast', 'email-subscribers' ) : $type;
+			}
 
-				$type = ucwords( str_replace( '_', ' ', $type ) );
+			$type = ucwords( str_replace( '_', ' ', $type ) );
 
-				return $type;
+			return $type;
 			case 'subject':
 				// case 'type':
 				//      return ucwords($item[ $column_name ]);
 			case 'count':
-				return $item[ $column_name ];
+			return $item[ $column_name ];
 			default:
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
+			}
 		}
-	}
 
-	function column_status( $item ) {
-		if ( $item['status'] == 'Sent' ) {
-			return __( 'Completed', 'email-subscribers' );
-		} else {
+		function column_status( $item ) {
+			if ( $item['status'] == 'Sent' ) {
+				return __( 'Completed', 'email-subscribers' );
+			} else {
 
-			$actions = array(
-				'send_now' => $this->prepare_send_now_url( $item )
-			);
+				$actions = array(
+					'send_now' => $this->prepare_send_now_url( $item )
+				);
 
-			return $item['status'] . $this->row_actions( $actions, true );
+				return $item['status'] . $this->row_actions( $actions, true );
+			}
 		}
-	}
 
 	/**
 	 * Render the bulk edit checkbox
@@ -250,9 +251,10 @@ class ES_Reports_Table extends WP_List_Table {
 		$title = '<strong>' . $item['subject'] . '</strong>';
 
 		$actions = array(
-			'view'          => sprintf( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s">%s</a>', esc_attr( $page ), 'view', $item['hash'], $es_nonce, __( 'View', 'email-subscribers' ) ),
+			'view'          => sprintf( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s" class="text-indigo-600">%s</a>', esc_attr( $page ), 'view', $item['hash'], $es_nonce, __( 'View', 'email-subscribers' ) ),
 			'delete'        => sprintf( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s">%s</a>', esc_attr( $page ), 'delete', absint( $item['id'] ), $es_nonce, __( 'Delete', 'email-subscribers' ) ),
-			'preview_email' => sprintf( '<a target="_blank" href="?page=%s&action=%s&list=%s&_wpnonce=%s">%s</a>', esc_attr( $page ), 'preview', absint( $item['id'] ), $es_nonce, __( 'Preview', 'email-subscribers' ) )
+			'preview_email' => sprintf( '<a target="_blank" href="?page=%s&action=%s&list=%s&_wpnonce=%s" class="text-indigo-600">%s</a>', esc_attr( $page ), 'preview', absint( $item['id'] ), $es_nonce, __( 'Preview', 'email-subscribers' ) )
+
 		);
 
 		return $title . $this->row_actions( $actions );
@@ -366,8 +368,9 @@ class ES_Reports_Table extends WP_List_Table {
 	public function get_notifications( $per_page = 5, $page_number = 1, $do_count_only = false ) {
 		global $wpdb;
 
-		$order_by = sanitize_sql_orderby( ig_es_get_request_data( 'orderby' ) );
-		$order    = ig_es_get_request_data( 'order' );
+		$order_by    = sanitize_sql_orderby( ig_es_get_request_data( 'orderby' ) );
+		$order       = ig_es_get_request_data( 'order' );
+		$campaign_id = ig_es_get_request_data( 'campaign_id' );
 
 		$ig_mailing_queue_table = IG_MAILING_QUEUE_TABLE;
 
@@ -375,6 +378,24 @@ class ES_Reports_Table extends WP_List_Table {
 			$sql = "SELECT count(*) as total FROM {$ig_mailing_queue_table}";
 		} else {
 			$sql = "SELECT * FROM {$ig_mailing_queue_table}";
+		}
+
+		$where_columns = array();
+		$where_args    = array();
+
+		if( ! empty( $campaign_id ) && is_numeric( $campaign_id ) ) {
+			$where_columns[] = "campaign_id = %d";
+			$where_args[]  = $campaign_id;
+		}
+
+		$where_query = '';
+		if( ! empty( $where_columns ) ) {
+			$where_query = implode( " AND ", $where_columns );
+			$where_query = $wpdb->prepare( $where_query, $where_args );
+		}
+
+		if( ! empty( $where_query ) ) {
+			$sql .= ' WHERE ' . $where_query;
 		}
 
 		if ( ! $do_count_only ) {
@@ -474,15 +495,15 @@ class ES_Reports_Table extends WP_List_Table {
 	public function preview_email( $report_id ) {
 		ob_start();
 		?>
-        <div class="wrap">
-            <h2 style="margin-bottom:1em;">
+		<div class="wrap">
+			<h2 style="margin-bottom:1em;">
 				<?php echo __( 'Preview Email', 'email-subscribers' ); ?>
-            </h2>
-            <p>
+			</h2>
+			<p>
 				<?php echo __( 'This is how the email you sent may look. <br>Note: Different email services (like gmail, yahoo etc) display email content differently. So there could be a slight variation on how your customer will view the email content.', 'email-subscribers' ); ?>
-            </p>
-            <div class="tool-box">
-                <div style="padding:15px;background-color:#FFFFFF;">
+			</p>
+			<div class="tool-box">
+				<div style="padding:15px;background-color:#FFFFFF;">
 					<?php
 					$preview = array();
 					$preview = ES_DB_Mailing_Queue::get_email_by_id( $report_id );
@@ -498,9 +519,9 @@ class ES_Reports_Table extends WP_List_Table {
 
 					echo stripslashes( $preview['body'] );
 					?>
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 		<?php
 		$html = ob_get_clean();
 

@@ -168,40 +168,40 @@ if ( ! class_exists( 'ES_Handle_Subscription' ) ) {
 					$this->status = "subscribed";
 				}
 
-				/**
-				 * Check if subscribers exists?
-				 *  - If yes, get id and save lists into ig_lists_contacts table
-				 *  - If not, create contact and then save list
-				 */
+				if ( count( $this->list_ids ) > 0 ) {
+					/**
+					 * Check if subscribers exists?
+					 *  - If yes, get id and save lists into ig_lists_contacts table
+					 *  - If not, create contact and then save list
+					 */
+					$contact_id = ES()->contacts_db->get_contact_id_by_email( $this->email );
+					if ( ! $contact_id ) {
+						$data               = array();
+						$data['first_name'] = $this->first_name;
+						$data['last_name']  = $this->last_name;
+						$data['source']     = 'form';
+						$data['form_id']    = $this->form_id;
+						$data['email']      = $this->email;
+						$data['hash']       = $this->guid;
+						$data['status']     = 'verified';
+						$data['hash']       = $this->guid;
+						$data['created_at'] = ig_get_current_date_time();
+						$data['updated_at'] = null;
+						$data['meta']       = null;
 
-				$contact_id = ES()->contacts_db->get_contact_id_by_email( $this->email );
-				if ( ! $contact_id ) {
-					$data               = array();
-					$data['first_name'] = $this->first_name;
-					$data['last_name']  = $this->last_name;
-					$data['source']     = 'form';
-					$data['form_id']    = $this->form_id;
-					$data['email']      = $this->email;
-					$data['hash']       = $this->guid;
-					$data['status']     = 'verified';
-					$data['hash']       = $this->guid;
-					$data['created_at'] = ig_get_current_date_time();
-					$data['updated_at'] = null;
-					$data['meta']       = null;
+						$data = apply_filters( 'ig_es_add_subscriber_data', $data );
+						if ( 'ERROR' === $data['status'] ) {
+							$this->do_response( $validate_response );
+							exit;
+						}
 
-					$data = apply_filters( 'ig_es_add_subscriber_data', $data );
-					if ( 'ERROR' === $data['status'] ) {
-						$this->do_response( $validate_response );
-						exit;
+						$contact_id = ES()->contacts_db->insert( $data );
+
+						//do_action( 'ig_es_contact_added', $data);
+
 					}
 
-					$contact_id = ES()->contacts_db->insert( $data );
 
-					//do_action( 'ig_es_contact_added', $data);
-
-				}
-
-				if ( count( $this->list_ids ) > 0 ) {
 					$contact_lists = ES()->lists_contacts_db->get_list_ids_by_contact( $contact_id, 'subscribed' );
 					if ( $contact_lists == $this->list_ids ) {
 						$response['message'] = 'es_email_exists_notice';

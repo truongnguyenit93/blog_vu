@@ -165,6 +165,25 @@ class ES_DB_Lists extends ES_DB {
 	}
 
 	/**
+	 * Get list by slug
+	 *
+	 * @param string $slug List slug.
+	 *
+	 * @return bool/array $list Returns list array if list exists else false.
+	 *
+	 * @since 4.4.3
+	 */
+	public function get_list_by_slug( $slug ) {
+		$list = $this->get_by( 'slug', $slug );
+
+		if ( is_null( $list ) ) {
+			return false;
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get all lists name by contact_id
 	 *
 	 * @param $id
@@ -226,13 +245,17 @@ class ES_DB_Lists extends ES_DB {
 	/**
 	 * Add List into database
 	 *
-	 * @param $list
+	 * @param string $list List name.
+	 *
+	 * @param string $slug List slug.
 	 *
 	 * @return int
 	 *
 	 * @since 4.0.0
+	 * 
+	 * @modified 4.4.3 Added $slug parameter.
 	 */
-	public function add_list( $list = '' ) {
+	public function add_list( $list = '', $slug = '' ) {
 
 		if ( empty( $list ) || ! is_scalar( $list ) ) {
 			return 0;
@@ -247,7 +270,7 @@ class ES_DB_Lists extends ES_DB {
 		}
 
 		$data = array(
-			'slug' => sanitize_title( $list ),
+			'slug' => ! empty( $slug ) ? $slug : sanitize_title( $list ),
 			'name' => $list
 		);
 

@@ -325,21 +325,25 @@ class ES_DB_Contacts extends ES_DB {
 	 * @return bool|int
 	 *
 	 * @since 4.2.4
+	 *
+	 * @modify 4.3.12
 	 */
 	public function delete_contacts_by_ids( $ids = array() ) {
-		global $wpdb;
 
 		$ids = $this->prepare_for_in_query( $ids );
 
 		$where = "id IN ($ids)";
 
-		$this->delete_by_condition( $where );
+		$delete = $this->delete_by_condition( $where );
 
-		$ig_lists_contacts_table = IG_LISTS_CONTACTS_TABLE;
+		if ( $delete ) {
+			$where = "contact_id IN ($ids)";
 
-		$query = "DELETE FROM $ig_lists_contacts_table WHERE contact_id IN ($ids)";
+			return ES()->lists_contacts_db->delete_by_condition( $where );
+		}
 
-		return $wpdb->query( $query );
+		return false;
+
 	}
 
 	/**
@@ -621,7 +625,7 @@ class ES_DB_Contacts extends ES_DB {
 
 			}
 
-			//Do import Lists Contacts
+			// Do import Lists Contacts
 			if ( count( $lists_contacts ) > 0 ) {
 				$list_name_id_map = ES()->lists_db->get_list_id_name_map( '', true );
 				foreach ( $lists_contacts as $list_name => $contacts ) {
@@ -669,5 +673,115 @@ class ES_DB_Contacts extends ES_DB {
 
 		return $wpdb->query( $query );
 	}
+
+	/**
+	 * Get total contacts by date
+	 *
+	 * @param string $status
+	 * @param int $days
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.0
+	 */
+	public function get_total_contacts_by_date( $status = 'subscribed', $days = 60 ) {
+
+		if ( $status === 'subscribed' ) {
+			$results = $this->get_total_subscribed_contacts_by_date( $days );
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Get contact id by email
+	 *
+	 * @param $email
+	 *
+	 * @return string|null
+	 *
+	 * @since 4.4.1
+	 */
+	public function get_contact_id_by_wp_user_id( $user_id ) {
+
+		if ( empty( $user_id ) ) {
+			return null;
+		}
+
+		return $this->get_column_by( 'id', 'wp_user_id', $user_id );
+	}
+
+	/**
+	 * Get total subscribed contacts by date
+	 *
+	 * @param string $status
+	 * @param int $days
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.2
+	 */
+	public function get_total_subscribed_contacts_by_date( $days = 60 ) {
+		global $wpdb;
+
+		$columns = array( 'DATE(created_at) as date', 'count(DISTINCT(id)) as total' );
+		$where   = "unsubscribed = %d";
+		$args[]  = 0;
+
+		if ( 0 != $days ) {
+			$days   = esc_sql( $days );
+			$where  .= " AND created_at >= DATE_SUB(NOW(), INTERVAL %d DAY)";
+			$args[] = $days;
+		}
+
+		$group_by = ' GROUP BY DATE(created_at)';
+
+		$where .= $group_by;
+
+		$where = $wpdb->prepare( $where, $args );
+
+		$results = $this->get_columns_by_condition( $columns, $where );
+
+		$contacts = array();
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $result ) {
+				$contacts[ $result['date'] ] = $result['total'];
+			}
+		}
+
+		return $contacts;
+	}
+
+	/**
+	 * Get total subscribed contacts before $days
+	 *
+	 * @param int $days
+	 *
+	 * @return array
+	 *
+	 * @since 4.4.2
+	 */
+	public function get_total_subscribed_contacts_before_days( $days = 60 ) {
+		global $wpdb;
+
+		$columns = array( 'count(DISTINCT(id)) as total' );
+		$where   = "unsubscribed = %d";
+		$args[]  = 0;
+
+		if ( 0 != $days ) {
+			$days   = esc_sql( $days );
+			$where  .= " AND created_at < DATE_SUB(NOW(), INTERVAL %d DAY)";
+			$args[] = $days;
+		}
+
+		$where = $wpdb->prepare( $where, $args );
+
+		$results = $this->get_columns_by_condition( $columns, $where );
+
+		$results = array_shift( $results );
+
+		return $results['total'];
+	}
+
 
 }

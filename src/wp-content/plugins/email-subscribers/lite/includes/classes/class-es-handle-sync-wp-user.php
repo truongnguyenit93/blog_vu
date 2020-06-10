@@ -6,9 +6,11 @@ class ES_Handle_Sync_Wp_User {
 
 	public function __construct() {
 		// Sync upcoming WordPress users
-		add_action( 'user_register', array( $this, 'sync_registered_wp_user' ) );
 		add_action( 'ig_es_sync_users_tabs_wordpress', array( $this, 'sync_wordpress_users_settings' ) );
-		add_action( 'edit_user_profile_update', array( $this, 'update_es_contact' ) );
+
+		//add_action( 'user_register', array( $this, 'sync_registered_wp_user' ) );
+		//add_action( 'edit_user_profile_update', array( $this, 'update_es_contact' ) );
+		//add_action( 'delete_user', array( $this, 'delete_contact' ), 10, 1 );
 	}
 
 	public function sync_wordpress_users_settings( $wordpress_tab ) {
@@ -92,72 +94,123 @@ class ES_Handle_Sync_Wp_User {
 		<?php
 	}
 
-
+	/**
+	 * @param $user_id
+	 *
+	 * @since 4.0
+	 *
+	 * @modify 4.3.12
+	 */
 	public function sync_registered_wp_user( $user_id ) {
 		$ig_es_sync_wp_users = get_option( 'ig_es_sync_wp_users', array() );
 
-		if ( empty( $ig_es_sync_wp_users ) ) {
-			$ig_es_sync_wp_users = array();
-		}
+		if ( ! empty( $ig_es_sync_wp_users ) ) {
 
-		$ig_es_sync_wp_users = maybe_unserialize( $ig_es_sync_wp_users );
+			$ig_es_sync_wp_users = maybe_unserialize( $ig_es_sync_wp_users );
 
-		$ig_es_registered = ( ! empty( $ig_es_sync_wp_users['es_registered'] ) ) ? $ig_es_sync_wp_users['es_registered'] : 'NO';
+			$ig_es_registered = ( ! empty( $ig_es_sync_wp_users['es_registered'] ) ) ? $ig_es_sync_wp_users['es_registered'] : 'NO';
 
-		if ( 'YES' === $ig_es_registered ) {
-			$list_id = $ig_es_sync_wp_users['es_registered_group'];
-			//get user info
-			$user_info = get_userdata( $user_id );
-			if ( ! ( $user_info instanceof WP_User ) ) {
-				return false;
+			if ( 'YES' === $ig_es_registered ) {
+				$list_id = $ig_es_sync_wp_users['es_registered_group'];
+				//get user info
+				$user_info = get_userdata( $user_id );
+				if ( $user_info instanceof WP_User ) {
+					$user_first_name = $user_info->display_name;
+
+					$email = $user_info->user_email;
+					if ( empty( $user_first_name ) ) {
+						$user_first_name = ES_Common::get_name_from_email( $email );
+					}
+					//prepare data
+					$data = array(
+						'first_name' => $user_first_name,
+						'email'      => $email,
+						'source'     => 'wp',
+						'status'     => 'verified',
+						'hash'       => ES_Common::generate_guid(),
+						'created_at' => ig_get_current_date_time(),
+						'wp_user_id' => $user_id
+					);
+
+					do_action( 'ig_es_add_contact', $data, $list_id );
+				}
+
 			}
-
-			$user_first_name = $user_info->display_name;
-
-			$email = $user_info->user_email;
-			if ( empty( $user_first_name ) ) {
-				$user_first_name = ES_Common::get_name_from_email( $email );
-			}
-			//prepare data
-			$data = array(
-				'first_name' => $user_first_name,
-				'email'      => $email,
-				'source'     => 'wp',
-				'status'     => 'verified',
-				'hash'       => ES_Common::generate_guid(),
-				'created_at' => ig_get_current_date_time(),
-				'wp_user_id' => $user_id
-			);
-
-			do_action( 'ig_es_add_contact', $data, $list_id );
 		}
-
-		return true;
 	}
 
+	/**
+	 * Update ES Contact detail
+	 *
+	 * @param $user_id
+	 *
+	 * @since 4.0
+	 *
+	 * @modify 4.3.12
+	 */
 	public function update_es_contact( $user_id ) {
 		$ig_es_sync_wp_users = get_option( 'ig_es_sync_wp_users', array() );
 
-		if ( empty( $ig_es_sync_wp_users ) ) {
-			$ig_es_sync_wp_users = array();
+		if ( ! empty( $ig_es_sync_wp_users ) ) {
+
+			$ig_es_sync_wp_users = maybe_unserialize( $ig_es_sync_wp_users );
+
+			$ig_es_registered = ( ! empty( $ig_es_sync_wp_users['es_registered'] ) ) ? $ig_es_sync_wp_users['es_registered'] : 'NO';
+
+			if ( 'YES' === $ig_es_registered ) {
+
+				$user_info = get_userdata( $user_id );
+				if ( ! ( $user_info instanceof WP_User ) ) {
+					return;
+				}
+				//check if user exist with this email
+				$es_contact_id = ES()->contacts_db->get_contact_id_by_email( $user_info->user_email );
+				if ( $es_contact_id ) {
+					$contact['email']      = $_POST['email'];
+					$contact['first_name'] = $_POST['display_name'];
+					ES()->contacts_db->update_contact( $es_contact_id, $contact );
+				}
+			}
 		}
 
-		$ig_es_sync_wp_users = maybe_unserialize( $ig_es_sync_wp_users );
 
-		$ig_es_registered = ( ! empty( $ig_es_sync_wp_users['es_registered'] ) ) ? $ig_es_sync_wp_users['es_registered'] : 'NO';
+	}
 
-		if ( 'YES' === $ig_es_registered ) {
+	/**
+	 * Delete contact from ES when user deleted from WordPress
+	 *
+	 * @param $user_id
+	 *
+	 * @since 4.3.12
+	 */
+	public function delete_contact( $user_id = 0 ) {
 
-			$user_info = get_userdata( $user_id );
-			if ( ! ( $user_info instanceof WP_User ) ) {
-				return;
-			}
-			//check if user exist with this email
-			$es_contact_id = ES()->contacts_db->get_contact_id_by_email( $user_info->user_email );
-			if ( $es_contact_id ) {
-				$contact['email']      = $_POST['email'];
-				$contact['first_name'] = $_POST['display_name'];
-				ES()->contacts_db->update_contact( $es_contact_id, $contact );
+		$ig_es_sync_wp_users = get_option( 'ig_es_sync_wp_users', array() );
+
+		if ( ! empty( $ig_es_sync_wp_users ) ) {
+
+			$ig_es_sync_wp_users = maybe_unserialize( $ig_es_sync_wp_users );
+
+			$ig_es_registered = ( ! empty( $ig_es_sync_wp_users['es_registered'] ) ) ? $ig_es_sync_wp_users['es_registered'] : 'NO';
+
+			if ( 'YES' === $ig_es_registered ) {
+
+				if ( ! empty( $user_id ) ) {
+					global $wpdb;
+
+					$user = get_user_by( 'ID', $user_id );
+
+					if ( $user instanceof WP_User ) {
+						$email = $user->user_email;
+
+						$where      = $wpdb->prepare( "email = %s", $email );
+						$contact_id = ES()->contacts_db->get_column_by_condition( 'id', $where );
+
+						if ( $contact_id ) {
+							ES()->contacts_db->delete_contacts_by_ids( $contact_id );
+						}
+					}
+				}
 			}
 		}
 
@@ -196,32 +249,19 @@ class ES_Handle_Sync_Wp_User {
 
 		$tabs = apply_filters( 'ig_es_sync_users_tabs', $tabs );
 		?>
-        <h2 class="nav-tab-wrapper">
-			<?php foreach ( $tabs as $key => $tab ) {
-				$tab_url = admin_url( 'admin.php?page=es_subscribers&action=sync' );
-				$tab_url = add_query_arg( 'tab', $key, $tab_url );
-
-				$indicator_option = ! empty( $tab['indicator_option'] ) ? $tab['indicator_option'] : '';
-				$indicator_label  = '';
-				$indicator_class  = '';
-				if ( ! empty( $indicator_option ) && ( get_option( $indicator_option, 'yes' ) == 'yes' ) ) {
-					$indicator_label = ! empty( $tab['indicator_label'] ) ? $tab['indicator_label'] : '';
-					$indicator_class = ! empty( $tab['indicator_type'] ) ? 'ig-es-indicator-' . $tab['indicator_type'] : 'ig-es-indicator-new';
-				}
-				?>
-                <a class="nav-tab <?php echo $key === $active_tab ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( $tab_url ); ?>"><?php echo esc_html__( $tab['name'] ); ?>
-					<?php if ( ! empty( $indicator_label ) ) { ?>
-                        <span class="ig-es-indicator<?php echo " " . $indicator_class; ?>"><?php echo $indicator_label; ?></span>
-					<?php } ?>
-                </a>
-			<?php } ?>
-        </h2>
-        <form name="form_sync" id="form_sync" method="post" action="#">
-			<?php
-			$from = ! empty( $tabs[ $active_tab ]['from'] ) ? $tabs[ $active_tab ]['from'] . '_' : '';
-			do_action( $from . 'ig_es_sync_users_tabs_' . $active_tab, $tabs[ $active_tab ] ); ?>
-        </form>
-
+        <div class="ig-es-sync-settings-notice">
+            <div class="text-center py-4 lg:px-4 my-8">
+                <div class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex mx-4 leading-normal" role="alert">
+                    <span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3"><?php echo esc_html( 'New', 'email-subscribers' ); ?></span>
+                    <span class="font-semibold text-left flex-auto">
+			    	<?php
+				    $workflows_page_url = menu_page_url( 'es_workflows', false );
+				    echo sprintf( __( 'Hey!!! now sync users using Email Subscribers\' workflows. <a href="%s" class="text-indigo-400">Create new workflows</a>', 'email-subscribers' ), $workflows_page_url );
+				    ?>
+			    </span>
+                </div>
+            </div>
+        </div>
 		<?php
 	}
 

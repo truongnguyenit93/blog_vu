@@ -191,6 +191,17 @@ if ( ! class_exists( 'ES_Install' ) ) {
 			'4.3.4' => array(
 				'ig_es_update_434_permanently_delete_campaigns',
 				'ig_es_update_434_db_version'
+			),
+
+			'4.4.1' => array(
+				'ig_es_update_441_create_tables',
+				'ig_es_update_441_migrate_audience_sync_settings',
+				'ig_es_update_441_db_version'
+			),
+
+			'4.4.2' => array(
+				'ig_es_update_442_set_workflows_default_permission',
+				'ig_es_update_442_db_version'
 			)
 
 		);
@@ -254,13 +265,13 @@ if ( ! class_exists( 'ES_Install' ) ) {
 
 				self::update( true );
 
-				ES_Admin_Notices::add_notice( 'update' );
+				//ES_Admin_Notices::add_notice( 'update' );
 			}
 
 			if ( ! empty( $_GET['force_update_ig_es'] ) ) {
 				check_admin_referer( 'ig_es_force_db_update', 'ig_es_force_db_update_nonce' );
 				self::update();
-				ES_Admin_Notices::add_notice( 'update' );
+				//ES_Admin_Notices::add_notice( 'update' );
 				wp_safe_redirect( admin_url( 'admin.php?page=es_settings' ) );
 				exit;
 			}
@@ -418,7 +429,7 @@ if ( ! class_exists( 'ES_Install' ) ) {
 					self::update();
 				} else {
 					self::$logger->info( 'Show update notice.', self::$logger_context );
-					ES_Admin_Notices::add_notice( 'update' );
+					//ES_Admin_Notices::add_notice( 'update' );
 				}
 			} else {
 				self::$logger->info( 'Database is upto date' );
@@ -708,6 +719,8 @@ if ( ! class_exists( 'ES_Install' ) ) {
 			$report .= "For more information, login to your dashboard and go to Reports menu in Email Subscribers.\n\n";
 			$report .= "Thank You.";
 
+
+
 			$new_contact_email_subject = "One more contact joins our tribe!";
 			$new_contact_email_content = "Hi,\r\n\r\nYour friendly Email Subscribers notification bot here!\r\n\r\n{{NAME}} ({{EMAIL}}) joined our tribe just now.\r\n\r\nWhich list/s? {{LIST}}\r\n\r\nIf you know this person, or if they are an influencer, you may want to reach out to them personally!\r\n\r\nLater...";
 
@@ -764,6 +777,8 @@ if ( ! class_exists( 'ES_Install' ) ) {
 				'ig_es_blocked_domains'                 => array( 'default' => 'mail.ru' ),
 				'ig_es_disable_wp_cron'                 => array( 'default' => 'no' ),
 				'ig_es_track_email_opens'               => array( 'default' => 'yes' ),
+				'ig_es_show_opt_in_consent'             => array( 'default' => 'yes' ),
+				'ig_es_opt_in_consent_text'             => array( 'default' => '' ),
 				'ig_es_installed_on'                    => array( 'default' => ig_get_current_date_time(), 'old_option' => '' ),
 				'ig_es_form_submission_success_message' => array( 'default' => __( 'Your subscription was successful! Kindly check your mailbox and confirm your subscription. If you don\'t see the email within a few minutes, check the spam/junk folder.', 'email-subscribers' ), 'old_option' => '' ),
 				'ig_es_db_update_history'               => array( 'default' => $ig_es_db_update_history ),
@@ -827,7 +842,7 @@ if ( ! class_exists( 'ES_Install' ) ) {
                 KEY `status` (status),
                 KEY `base_template_id` (base_template_id)
             ) $collate;
-            
+
             CREATE TABLE `{$wpdb->prefix}ig_contacts` (
 				`id` int(10) NOT NULL AUTO_INCREMENT,
 				`wp_user_id` int(10) NOT NULL DEFAULT '0',
@@ -856,8 +871,8 @@ if ( ! class_exists( 'ES_Install' ) ) {
             ) $collate;
 
             CREATE TABLE `{$wpdb->prefix}ig_contacts_ips` (
-				ip varchar(45) NOT NULL, 
-				created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+				ip varchar(45) NOT NULL,
+				created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				PRIMARY KEY  (created_on, ip),
 				KEY ip (ip)
             ) $collate;
@@ -891,7 +906,7 @@ if ( ! class_exists( 'ES_Install' ) ) {
 				`updated_at` datetime DEFAULT NULL,
 				`deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY  (id)
-                                                      
+
             ) $collate;
 
             CREATE TABLE `{$wpdb->prefix}ig_lists_contacts` (
@@ -1083,6 +1098,55 @@ if ( ! class_exists( 'ES_Install' ) ) {
 		}
 
 		/**
+		 * Create Links Table
+		 *
+		 * @return string
+		 *
+		 * @sinc 4.4.1
+		 */
+		public static function get_ig_es_441_schema() {
+
+			global $wpdb;
+
+			$collate = '';
+
+			if ( $wpdb->has_cap( 'collation' ) ) {
+				$collate = $wpdb->get_charset_collate();
+			}
+
+			$tables = "CREATE TABLE `{$wpdb->prefix}ig_workflows` (
+					`id` int(10) NOT NULL AUTO_INCREMENT,
+					`name` varchar(255) DEFAULT NULL,
+					`title` varchar(255) DEFAULT NULL,
+					`trigger_name` varchar(250) NOT NULL,
+					`trigger_options` longtext NOT NULL,
+					`rules` longtext NOT NULL,
+					`actions` longtext NOT NULL,
+					`status` tinyint(4) NOT NULL,
+					`type` tinyint(4) NOT NULL,
+					`priority` int(11) DEFAULT 0,
+					`meta` longtext NOT NULL,
+					`created_at` datetime DEFAULT NULL,
+					`updated_at` datetime DEFAULT NULL,
+					PRIMARY KEY (id)
+	            ) $collate;
+
+				CREATE TABLE {$wpdb->prefix}ig_workflows_queue (
+	                `id` bigint(20) NOT NULL AUTO_INCREMENT,
+					`workflow_id` bigint(20) DEFAULT NULL,
+					`failed` int(1) NOT NULL DEFAULT 0,
+					`failure_code` int(3) NOT NULL DEFAULT 0,
+					`meta` longtext NOT NULL,
+					`scheduled_at` datetime DEFAULT NULL,
+					`created_at` datetime DEFAULT NULL,
+					PRIMARY KEY (id)
+	            ) $collate;
+			";
+
+			return $tables;
+		}
+
+		/**
 		 * Collect multiple version table schema
 		 *
 		 * @return string
@@ -1095,6 +1159,7 @@ if ( ! class_exists( 'ES_Install' ) ) {
 			$tables .= self::get_ig_es_420_schema();
 			$tables .= self::get_ig_es_421_schema();
 			$tables .= self::get_ig_es_424_schema();
+			$tables .= self::get_ig_es_441_schema();
 
 			return $tables;
 		}
@@ -1583,6 +1648,7 @@ if ( ! class_exists( 'ES_Install' ) ) {
 			} else {
 				$file = $upload_dir['basedir'] . '/' . $filename;
 			}
+
 			file_put_contents( $file, $image_data );
 
 			$wp_filetype = wp_check_filetype( $filename, null );
@@ -1665,11 +1731,16 @@ if ( ! class_exists( 'ES_Install' ) ) {
 				'administrator' => 'yes'
 			);
 
+			$workflows_permission = array(
+				'administrator' => 'yes'
+			);
+
 			$es_roles_default_permission['campaigns'] = $campaigns_permission;
 			$es_roles_default_permission['reports']   = $reports_permission;
 			$es_roles_default_permission['sequence']  = $sequence_permission;
 			$es_roles_default_permission['audience']  = $audience_permission;
 			$es_roles_default_permission['forms']     = $forms_permission;
+			$es_roles_default_permission['workflows'] = $workflows_permission;
 
 			return $es_roles_default_permission;
 		}

@@ -242,6 +242,20 @@ class ES_DB_Mailing_Queue {
 		return $last_report_id;
 	}
 
+	public static function update_notification( $notification_id, $data ) {
+		global $wpdb;
+
+		$column_formats  = self::get_columns();
+		$column_defaults = self::get_column_defaults();
+		$prepared_data   = ES_DB::prepare_data( $data, $column_formats, $column_defaults, true );
+
+		$data           = $prepared_data['data'];
+		$column_formats = $prepared_data['column_formats'];
+
+		$wpdb->update( IG_MAILING_QUEUE_TABLE, $data, array( 'id' => $notification_id ), $column_formats );
+
+	}
+
 	public static function get_id_details_map() {
 		global $wpdb;
 
@@ -270,6 +284,25 @@ class ES_DB_Mailing_Queue {
 		}
 
 		return $report;
+	}
+
+	/**
+	 * @param int $count
+	 *
+	 * @return array|object|null
+	 *
+	 * @since 4.4.0
+	 */
+	public static function get_recent_campaigns( $count = 5 ) {
+		global $wpdb;
+
+		if ( ! is_numeric( $count ) ) {
+			$count = 5;
+		}
+
+		$query = "SELECT id, hash, campaign_id, subject, start_at, status, finish_at FROM {$wpdb->prefix}ig_mailing_queue order by created_at DESC LIMIT 0, $count";
+
+		return $wpdb->get_results( $query, ARRAY_A );
 	}
 
 	public static function do_insert( $place_holders, $values ) {

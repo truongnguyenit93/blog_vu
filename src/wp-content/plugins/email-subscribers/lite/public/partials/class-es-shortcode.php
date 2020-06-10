@@ -61,9 +61,7 @@ class ES_Shortcode {
 	public static function render_es_form( $atts ) {
 		ob_start();
 
-		$atts = shortcode_atts( array(
-			'id' => ''
-		), $atts, 'email-subscribers-form' );
+		$atts = shortcode_atts( array( 'id' => '' ), $atts, 'email-subscribers-form' );
 
 		$id = $atts['id'];
 
@@ -71,6 +69,7 @@ class ES_Shortcode {
 			$form = ES()->forms_db->get_form_by_id( $id );
 
 			if ( $form ) {
+
 				$form_data = ES_Forms_Table::get_form_data_from_body( $form );
 
 				self::render_form( $form_data );
@@ -135,6 +134,8 @@ class ES_Shortcode {
 		$list               = ! empty( $data['list'] ) ? $data['list'] : 0;
 		$desc               = ! empty( $data['desc'] ) ? $data['desc'] : '';
 		$form_version       = ! empty( $data['form_version'] ) ? $data['form_version'] : '0.1';
+		$gdpr_consent       = ! empty( $data['gdpr_consent'] ) ? $data['gdpr_consent'] : 'no';
+		$gdpr_consent_text  = ! empty( $data['gdpr_consent_text'] ) ? $data['gdpr_consent_text'] : '';
 
 		/**
 		 * We did not have $email_label, $name_label in
@@ -162,7 +163,6 @@ class ES_Shortcode {
 		$hp_style  = "position:absolute;top:-99999px;" . ( is_rtl() ? 'right' : 'left' ) . ":-99999px;z-index:-99;";
 		$nonce     = wp_create_nonce( 'es-subscribe' );
 
-
 		// Name
 		$name_html = $required = '';
 		if ( ! empty( $show_name ) && 'no' !== $show_name ) {
@@ -172,7 +172,7 @@ class ES_Shortcode {
 					$name_label .= '*';
 				}
 			}
-			$name_html = '<div class="es-field-wrap"><label>' . $name_label . '<br/><input type="text" name="name" placeholder="' . $name_place_holder . '" value="" ' . $required . '/></label></div>';
+			$name_html = '<div class="es-field-wrap"><label>' . $name_label . '<br/><input type="text" name="name" class="ig_es_form_field_name"  placeholder="' . $name_place_holder . '" value="" ' . $required . '/></label></div>';
 		}
 
 		// Lists
@@ -204,7 +204,7 @@ class ES_Shortcode {
 		if ( ! empty( $email_label ) ) {
 			$email_html .= $email_label . '*' . '<br/>';
 		}
-		$email_html .= '<input class="es_required_field es_txt_email" type="email" name="email" value="" placeholder="' . $email_place_holder . '" required/></label></div>';
+		$email_html .= '<input class="es_required_field es_txt_email ig_es_form_field_email" type="email" name="email" value="" placeholder="' . $email_place_holder . '" required/></label></div>';
 
 		?>
 
@@ -222,15 +222,22 @@ class ES_Shortcode {
                 <input type="hidden" name="es_email_page_url" value="<?php echo $current_page_url; ?>"/>
                 <input type="hidden" name="status" value="Unconfirmed"/>
                 <input type="hidden" name="es-subscribe" id="es-subscribe" value="<?php echo $nonce; ?>"/>
-                <label style="<?php echo $hp_style; ?>"><input type="email" name="es_hp_email" class="es_required_field" tabindex="-1" autocomplete="-1" value="" /></label>
-				<?php do_action( 'ig_es_after_form_fields' ) ?>
-				<?php if ( ( in_array( 'gdpr/gdpr.php', $active_plugins ) || array_key_exists( 'gdpr/gdpr.php', $active_plugins ) ) ) {
+                <label style="<?php echo $hp_style; ?>"><input type="email" name="es_hp_email" class="es_required_field" tabindex="-1" autocomplete="-1" value=""/></label>
+				<?php
+
+				do_action( 'ig_es_after_form_fields', $data );
+
+				if ( $gdpr_consent === 'yes' ) { ?>
+                    <p><input type="checkbox" name="es_gdpr_consent" value="true" required/>&nbsp;<label style="display: inline"><?php echo $gdpr_consent_text; ?></label></p>
+				<?php } elseif ( ( in_array( 'gdpr/gdpr.php', $active_plugins ) || array_key_exists( 'gdpr/gdpr.php', $active_plugins ) ) ) {
 					echo GDPR::consent_checkboxes();
-				} ?>
+				}
+
+				?>
                 <input type="submit" name="submit" class="es_subscription_form_submit es_submit_button es_textbox_button" id="es_subscription_form_submit_<?php echo $unique_id; ?>" value="<?php echo $button_label; ?>"/>
 
 				<?php $spinner_image_path = ES_PLUGIN_URL . 'lite/public/images/spinner.gif'; ?>
-                
+
                 <span class="es_spinner_image" id="spinner-image"><img src="<?php echo $spinner_image_path; ?>"/></span>
 
             </form>
@@ -242,7 +249,7 @@ class ES_Shortcode {
 	}
 
 	public static function prepare_lists_checkboxes( $lists, $list_ids = array(), $columns = 3, $selected_lists = array(), $contact_id = 0, $name = "lists[]" ) {
-		$lists_html = '<div><p><b>' . __( 'Select List(s)', 'email-subscribers' ) . '*</b></p><table class="ig-es-form-list-selection"><tr>';
+		$lists_html = '<div><p><b class="font-medium text-gray-500 pb-2">' . __( 'Select List(s)', 'email-subscribers' ) . '*</b></p><table class="ig-es-form-list-selection"><tr>';
 		$i          = 0;
 
 		if ( ! empty( $contact_id ) ) {
@@ -259,9 +266,9 @@ class ES_Shortcode {
 					if ( ! empty( $contact_id ) ) {
 						$status_span = '<span class="es_list_contact_status ' . $list_contact_status_map[ $list_id ] . '" title="' . ucwords( $list_contact_status_map[ $list_id ] ) . '">';
 					}
-					$lists_html .= '<td>' . $status_span . '<label><input type="checkbox" name="' . $name . '" checked="checked" value="' . $list_id . '" />' . $list_name . '</label></td>';
+					$lists_html .= '<td class="pt-4">' . $status_span . '<label><input type="checkbox" class="pl-6 form-checkbox" name="' . $name . '" checked="checked" value="' . $list_id . '" /><span class="pl-1 pr-6 text-gray-500 text-sm font-normal">' . $list_name . '</span></label></td>';
 				} else {
-					$lists_html .= '<td><label><input type="checkbox" name="' . $name . '" value="' . $list_id . '" />' . $list_name . '</label></td>';
+					$lists_html .= '<td class="pt-4"><label><input type="checkbox" class="pl-6 form-checkbox " name="' . $name . '" value="' . $list_id . '" /><span class="pl-1 pr-6 text-gray-500 text-sm font-normal">' . $list_name . '</span></label></td>';
 				}
 				$i ++;
 			}

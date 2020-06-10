@@ -18,7 +18,7 @@ class ES_Post_Notifications_Table {
 		$action = ig_es_get_request_data( 'action' );
 
 		?>
-        <div class="wrap">
+		<div class="wrap">
 			<?php if ( 'new' === $action ) {
 				$this->es_newnotification_callback();
 			} elseif ( 'edit' === $action ) {
@@ -26,7 +26,7 @@ class ES_Post_Notifications_Table {
 				$this->edit_list( absint( $list ) );
 			}
 			?>
-        </div>
+		</div>
 		<?php
 	}
 
@@ -59,7 +59,7 @@ class ES_Post_Notifications_Table {
 
 			$type  = 'post_notification';
 			$title = get_the_title( $template_id );
-            
+
 			$data = array(
 				'categories'       => ES_Common::convert_categories_array_to_string( $cat ),
 				'list_ids'         => $list_id,
@@ -195,10 +195,10 @@ class ES_Post_Notifications_Table {
 			}
 			$data['name'] = $title;
 
-            $data = apply_filters( 'ig_es_post_notification_data', $data );
-            $data['type'] = !empty($data['type']) ? $data['type'] : 'post_notification';
+			$data = apply_filters( 'ig_es_post_notification_data', $data );
+			$data['type'] = !empty($data['type']) ? $data['type'] : 'post_notification';
             //check tempalte id
-            if ( empty( $data['base_template_id'] ) ) {
+			if ( empty( $data['base_template_id'] ) ) {
 				$message = __( 'Please select template.', 'email-subscribers' );
 				ES_Common::show_message( $message, 'error' );
 				$this->prepare_post_notification_form( $id, $data );
@@ -241,121 +241,153 @@ class ES_Post_Notifications_Table {
 		$is_new = empty( $id ) ? 1 : 0;
 
 		$action  = 'new';
-		$heading = __( 'Campaigns > New Post Notification', 'email-subscribers' );
+		$heading = __(' New Post Notification','email-subscribers');
 		if ( ! $is_new ) {
 			$action  = 'edit';
-			$heading = __( 'Campaigns > Edit Post Notification', 'email-subscribers' );
+			$heading = __( ' Edit Post Notification', 'email-subscribers' );
 		}
 		$cat         = isset( $data['categories'] ) ? $data['categories'] : '';
 		$list_id     = isset( $data['list_ids'] ) ? $data['list_ids'] : '';
 		$template_id = isset( $data['base_template_id'] ) ? $data['base_template_id'] : '';
-		$status      = isset( $data['status'] ) ? $data['status'] : '';
+		$status      = isset( $data['status'] ) ? $data['status'] : 0 ;
 		$nonce       = wp_create_nonce( 'es_post_notification' );
 		?>
 
-        <div class="wrap">
-            <h2 class="wp-heading-inline"><?php echo $heading; ?>
-                <a href="admin.php?page=es_campaigns" class="page-title-action"><?php _e( 'Campaigns', 'email-subscribers' ) ?></a>
-				<?php if ( $action === 'edit' ) { ?>
-                    <a href="admin.php?page=es_notifications&action=new" class="page-title-action"><?php _e( 'Add New', 'email-subscribers' ) ?></a>
-				<?php } ?>
-                <a href="edit.php?post_type=es_template" class="page-title-action es-imp-button"><?php _e( 'Manage Templates', 'email-subscribers' ) ?></a>
-            </h2>
-            <hr class="wp-header-end">
-            <div class="meta-box-sortables ui-sortable" style="width: 80%;display:inline;float:left">
-                <form method="post" action="admin.php?page=es_notifications&action=<?php echo $action; ?>&list=<?php echo $id; ?>&_wpnonce=<?php echo $nonce; ?>">
-                    <table class="form-table">
-                        <tbody>
-                        <?php do_action('es_before_post_notification_settings', $id ); ?>
-                        <tr>
-                            <th scope="row">
-                                <label for="tag-link"><?php _e( 'Select List', 'email-subscribers' ); ?></label>
-                                <p class="helper"><?php _e( 'Contacts from the selected list will be notified about new post notification.', 'email-subscribers' ); ?></p>
-                            </th>
-                            <td>
-                                <select name="list_id" id="ig_es_post_notification_list_ids">
-									<?php echo ES_Common::prepare_list_dropdown_options( $list_id ); ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <label for="tag-link">
-									<?php _e( 'Select template', 'email-subscribers' ); ?>
-                                    <p class="helper"><?php _e( 'Content of the selected template will be sent out as post notification.', 'email-subscribers' ); ?></p>
-                                </label>
-                            </th>
-                            <td>
-                                <select name="template_id" id="base_template_id">
-									<?php echo ES_Common::prepare_templates_dropdown_options( 'post_notification', $template_id ); ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <?php do_action('es_after_post_notification_template', $id ); ?>
-						<?php if ( ! $is_new ) { ?>
-                            <tr>
-                                <th scope="row">
-                                    <label for="tag-link">
-										<?php _e( 'Select Status', 'email-subscribers' ); ?>
-                                    </label>
-                                </th>
-                                <td>
-                                    <select name="status" id="status">
-										<?php echo ES_Common::prepare_status_dropdown_options( $status ); ?>
-                                    </select>
-                                </td>
-                            </tr>
-						<?php } ?>
-                        <tr>
-                            <th scope="row">
-                                <label for="tag-link"><?php _e( 'Select Post Category', 'email-subscribers' ); ?></label>
-                                <p class="helper"><?php _e( 'Notification will be sent out when any post from selected categories will be published.', 'email-subscribers' ); ?></p>
-                            </th>
-                            <td style="vertical-align: top;">
-                                <table border="0" cellspacing="0">
-                                    <tbody>
-									<?php echo ES_Common::prepare_categories_html( $cat ); ?>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <label for="tag-link">
-									<?php _e( 'Select custom post type(s)', 'email-subscribers' ); ?>
-                                    <p class="helper"><?php _e( '(Optional) Select custom post type for which you want to send notification.', 'email-subscribers' ); ?></p>
-                                </label>
-                            </th>
-                            <td>
-                                <table border="0" cellspacing="0">
-                                    <tbody>
-									<?php $custom_post_type = '';
-									echo ES_Common::prepare_custom_post_type_checkbox( $cat ); ?>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <?php do_action('es_after_post_notification_settings', $id ); ?>
-                        <tr>
-                            <td><input type="hidden" name="submitted" value="submitted"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="row-blog">
-                        <div class="leftside">
-                            <p class="submit"><input type="submit" name="submit" id="ig_es_campaign_post_notification_submit_button" class="button button-primary button-large" value="Save Changes"></p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div clas="es-preview" style="float: right;width: 19%;">
-                <div class="es-templ-img"></div>
-            </div>
-        </div>
+		<div class="wrap max-w-full mt-1 font-sans">
+			<header class="ml-12 mr-8 wp-heading-inline">
+				<div class="sm:grid sm:grid-cols lg:grid lg:grid-cols-2 max-w-full">
+					<div class="mt-2">		
+						<h2 class="text-2xl font-medium mt-2 text-gray-900 sm:leading-9 sm:truncate">
+							<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate"> <a href="admin.php?page=es_campaigns"><?php _e('Campaigns ','email-subscribers'); ?></a></span> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg>
 
-		<?php
+							 <?php echo $heading; ?>
+						</h2>
+					</div>
+					<div class="py-2 md:mt-0">
+						<div class="flex flex-row sm:justify-start md:justify-end mt-2">
+							<div>
+								<?php if ( $action === 'edit' ) { ?>
+									<a href="admin.php?page=es_notifications&action=new" class="ig-es-title-button px-4 py-2 mx-2"><?php _e( 'Add New', 'email-subscribers' ) ?></a>
+								<?php } ?>
+								<a href="edit.php?post_type=es_template" class="ig-es-imp-button px-4 py-2"><?php _e( 'Manage Templates', 'email-subscribers' ) ?></a>
+							</div>	
+						</div>
+					</div>
+				</div>
+			</header>
+			<div class="ml-12 mr-8"><hr class="wp-header-end"></div>
 
-	}
+			<div class="meta-box-sortables ui-sortable bg-white shadow-md ml-12 mr-8 mt-6 rounded-lg">
+				<form class="ml-5 mr-4 text-left pt-4 mt-2 item-center" method="post" action="admin.php?page=es_notifications&action=<?php echo $action; ?>&list=<?php echo $id; ?>&_wpnonce=<?php echo $nonce; ?>"> 
+
+					<table class="max-w-full form-table">
+						<tbody>
+
+							<?php do_action('es_before_post_notification_settings', $id ); ?>
+
+							<tr class="border-b  border-gray-100">
+								<th scope="row" class="w-3/12 pt-3 pb-8 text-left">
+									<label for="tag-link"><span class="block ml-6 pr-4 text-sm font-medium text-gray-600 pb-2">
+										<?php _e( 'Select List', 'email-subscribers' ); ?></span>
+										<p class="italic text-xs font-normal text-gray-400 mt-2 ml-6 leading-snug"><?php _e( 'Contacts from the selected list will be notified about new post notification.', 'email-subscribers' ); ?></p></label>
+									</th>
+
+									<td class="w-9/12 pb-3 ">
+										<select class="relative form-select shadow-sm border border-gray-400 w-1/3 ml-12" name="list_id" id="ig_es_post_notification_list_ids">
+											<?php echo ES_Common::prepare_list_dropdown_options( $list_id ); ?>
+										</select>
+									</td>
+								</tr>
+								<tr class="border-b border-gray-100">
+									<th scope="row" class="w-3/12 pt-3 pb-8 text-left">
+										<label for="tag-link"><span class="block ml-6 pr-4 text-sm font-medium text-gray-600 pb-2">
+											<?php _e( 'Select template', 'email-subscribers' ); ?></span>
+											<p class="italic text-xs font-normal text-gray-400 mt-2 ml-6 leading-snug"><?php _e( 'Content of the selected template will be sent out as post notification.', 'email-subscribers' ); ?></p>
+										</label>
+									</th>
+									<td class="w-9/12 pb-3">
+										<select class="relative form-select shadow-sm border border-gray-400 w-1/3 ml-12" name="template_id" id="base_template_id">
+											<?php echo ES_Common::prepare_templates_dropdown_options( 'post_notification', $template_id ); ?>
+										</select>
+										<div class="es-preview" style="float: right;width: 25%;">
+											<div class="es-templ-img"></div>
+										</div>
+									</td>
+								</tr>
+								<?php do_action('es_after_post_notification_template', $id ); ?>
+								<?php if ( ! $is_new ) { ?>
+									<tr class="border-b border-gray-100">
+										<th scope="row" class="w-3/12 pt-3 pb-8 text-left">
+											<label for="tag-link"><span class="block ml-6 pr-4 pt-2 text-sm font-medium text-gray-600 pb-2">
+												<?php _e( 'Select Status', 'email-subscribers' ); ?>
+											</label>
+										</th>
+										<td class="w-9/12 py-3">
+											<label for="status" class="ml-12 inline-flex items-center cursor-pointer"><span class="relative">
+												<input id="status" type="checkbox" class="absolute es-check-toggle opacity-0 w-0 h-0" 
+												name="status"  value="1" <?php checked( $status, '1' ); ?> />
+
+												<span class="es-mail-toggle-line inline-block w-10 h-6 bg-gray-300 rounded-full shadow-inner"></span>
+												<span class="es-mail-toggle-dot absolute transition-all duration-300 ease-in-out block w-4 h-4 mt-1 ml-1 bg-white rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline"></span>	
+											</span></label>
+										</td>
+									</tr>
+								<?php } ?>
+								<tr class="border-b border-gray-100">
+									<th scope="row" class="pt-3 pb-8 w-3/12 text-left">
+										<label for="tag-link"><span class="block ml-6 pr-4 text-sm font-medium text-gray-600 pb-2"><?php _e( 'Select Post Category', 'email-subscribers' ); ?></span>
+											<p class="italic text-xs font-normal text-gray-400 mt-2 ml-6 leading-snug"><?php _e( 'Notification will be sent out when any post from selected categories will be published.', 'email-subscribers' ); ?></p></label>
+										</th>
+										<td class="pt-3 w-9/12" style="vertical-align: top;">
+											<table border="0" cellspacing="0" class="ml-4 pt-3">
+												<tbody>
+													<?php echo ES_Common::prepare_categories_html( $cat ); ?>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr class="border-b border-gray-100">
+										<th scope="row" class="pt-3 pb-8 w-3/12 text-left">
+											<label for="tag-link"><span class="block ml-6 pr-4 text-sm font-medium text-gray-600 pb-2">
+												<?php _e( 'Select custom post type(s)', 'email-subscribers' ); ?></span>
+												<p class="italic text-xs font-normal text-gray-400 mt-2 ml-6 leading-snug"><?php _e( '(Optional) Select custom post type for which you want to send notification.', 'email-subscribers' ); ?></p></label>
+
+											</th>
+											<td class="w-9/12 pt-3 pb-8">
+												<table border="0" cellspacing="0">
+													<tbody>
+														<?php $custom_post_type = '';
+														echo ES_Common::prepare_custom_post_type_checkbox( $cat ); ?>
+													</tbody>
+												</table>
+											</td>
+										</tr>	
+										<?php do_action('es_after_post_notification_settings', $id ); ?>
+										<tr>
+											<td><input type="hidden" name="submitted" value="submitted"></td>
+										</tr>
+									</tbody>
+								</table>
+								<div>
+									<p class="submit"><input type="submit" name="submit" id="ig_es_campaign_post_notification_submit_button" class="cursor-pointer align-middle ig-es-primary-button px-4 py-2 ml-6 mr-2" value="<?php if ( $is_new ) {  
+											_e( 'Save Campaign', 'email-subscribers' ); 
+										}
+										else{
+											_e( 'Save Changes', 'email-subscribers' ); 
+										}
+
+										?>"/>
+										<a href="admin.php?page=es_campaigns" class="cursor-pointer align-middle rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a></p>	
+								</div>
+
+							</form>
+
+						</div>
+					</div>
+
+					<?php
+
+				}
 
 
 	/**
@@ -372,11 +404,11 @@ class ES_Post_Notifications_Table {
 	}
 
 	public function search_box( $text, $input_id ) { ?>
-        <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( 'Search Notifications', 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
-        </p>
+		</p>
 		<?php
 	}
 
